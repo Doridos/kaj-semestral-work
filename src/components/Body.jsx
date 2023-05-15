@@ -31,17 +31,17 @@ export function Body(){
     const [dontShow3, setDontShow3] = useState(true);
     const [dontShow4, setDontShow4] = useState(true);
 
+
+
     function highlightEraser(){
         setLastColor(color)
         setColor("#FFFFFF")
         document.querySelector('.svg-icon-pen').classList.remove("highlighted")
-        document.querySelector('.svg-icon-pen').classList.add("no-box-shadow")
         document.querySelector('.svg-icon-eraser').classList.add("highlighted")
     }
     function highlightPen(){
         setColor(lastColor ==="none" ? "#000000" : lastColor)
         document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
-        document.querySelector('.svg-icon-eraser').classList.add("no-box-shadow")
         document.querySelector('.svg-icon-pen').classList.add("highlighted")
 
     }

@@ -32,8 +32,8 @@ export function useOnDraw(onDraw){
             let ctx = canvasRef.current.getContext("2d");
             ctx.fillStyle = "white";
             ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-            console.log(canvasRef.current)
             setInit(false)
+            document.querySelector('.svg-icon-pen').classList.add("highlighted")
         }
         initMouseMoveListener()
         initMouseDownListener()

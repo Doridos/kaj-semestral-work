@@ -7,8 +7,11 @@ const Canvas = ({
     inputWidth
 }) => {if(width !== undefined && height !== undefined){
     const setCanvasRef = useOnDraw(onDraw)
+    let points = []
+    let pathHistory = []
     function onDraw(ctx, point, previousPoint){
         drawLine(previousPoint, point, ctx, color, inputWidth)
+
     }
 
     function drawLine(start,
@@ -19,7 +22,6 @@ const Canvas = ({
     ){
         start = start ?? end;
         ctx.beginPath();
-
         ctx.lineWidth = inputWidth;
         ctx.strokeStyle = color;
         ctx.lineJoin = "round"; // Creates a rounded corner when lines meet
