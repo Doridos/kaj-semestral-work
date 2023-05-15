@@ -4,14 +4,25 @@ const Canvas = ({
     width,
     height,
     color,
-    inputWidth
+    inputWidth,
+    setSteps,
+    steps,
+    pathHistory
 }) => {if(width !== undefined && height !== undefined){
-    const setCanvasRef = useOnDraw(onDraw)
-    let points = []
-    let pathHistory = []
+    const setCanvasRef = useOnDraw(onDraw,rememberPath)
     function onDraw(ctx, point, previousPoint){
         drawLine(previousPoint, point, ctx, color, inputWidth)
-
+    }
+    function rememberPath(ctx){
+        ctx.save()
+        // if(pathHistory.length >0){
+        //     if(path.toString() !== "" && pathHistory[pathHistory.length-1].toString() !== path.toString()){
+        //         pathHistory.push(path)
+        //     }
+        // }
+        // else {
+        //     pathHistory.push(path)
+        // }
     }
 
     function drawLine(start,

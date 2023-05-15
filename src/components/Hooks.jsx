@@ -1,6 +1,6 @@
 import {useRef, useState} from "react";
 
-export function useOnDraw(onDraw){
+export function useOnDraw(onDraw, rememberPath){
 
     const canvasRef = useRef(null)
 
@@ -11,6 +11,8 @@ export function useOnDraw(onDraw){
     const mouseUpListenerRef = useRef(null)
     const previousPointRef = useRef(null)
     const [init, setInit] = useState(true);
+
+    let pointsOfPath = []
 
     useState(() => {
         return () => {
@@ -47,6 +49,7 @@ export function useOnDraw(onDraw){
                 const ctx = canvasRef.current.getContext('2d')
                 if(onDraw) onDraw(ctx, point, previousPointRef.current)
                 previousPointRef.current = point
+                pointsOfPath.push({x:previousPointRef.current.x, y:previousPointRef.current.y})
             }
         }
         mouseMoveListenerRef.current = mouseMoveListener
@@ -66,6 +69,9 @@ export function useOnDraw(onDraw){
         const listener = () => {
             isDrawingRef.current = false;
             previousPointRef.current = null
+            if(rememberPath) rememberPath()
+            pointsOfPath = []
+
         }
         mouseUpListenerRef.current = listener
         window.addEventListener('mouseup', listener)

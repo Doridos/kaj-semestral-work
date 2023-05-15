@@ -4,6 +4,7 @@ import "primereact/resources/primereact.min.css"
 import './Body.css'
 import Canvas from "./Canvas.jsx";
 import {ColorPicker} from "primereact/colorpicker";
+import canvas from "./Canvas.jsx";
 function Slider({ value, min, max, step, onChange }) {
     return (
         <input
@@ -26,10 +27,14 @@ export function Body(){
     const [colorPicker4, setColorPicker4] = useState("#f5942f");
     const [lastColor, setLastColor] = useState("none");
 
+
     const [dontShow1, setDontShow1] = useState(true);
     const [dontShow2, setDontShow2] = useState(true);
     const [dontShow3, setDontShow3] = useState(true);
     const [dontShow4, setDontShow4] = useState(true);
+
+    let pathHistory = []
+    let steps = 0
 
 
 
@@ -48,11 +53,34 @@ export function Body(){
     function deleteCanvas() {
         let text = "Do you want to erase whole canvas?\nIf yes press OK, otherwise press Cancel.";
         if (confirm(text) === true) {
-            let canvas = document.querySelector('canvas');
-            let ctx = canvas.getContext("2d");
+            const canvas = document.querySelector('canvas');
+            const ctx = canvas.getContext("2d");
             ctx.fillStyle = "white";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
+    }
+
+    function drawPaths(){
+
+        // if (steps === 0) {
+        //     return
+        // }
+        const canvas = document.querySelector('canvas');
+        const ctx = canvas.getContext("2d");
+        ctx.restore()
+        // // delete everything
+        // console.log(pathHistory)
+        // ctx.clearRect(0,0,canvas.width,canvas.height);
+        // // draw all the paths in the paths array
+        // for (let i = 0; i < pathHistory.length - 1; i++) {
+        //     let path = pathHistory[i]
+        //     ctx.beginPath();
+        //     ctx.moveTo(path[0].x,path[0].y);
+        //     for(let i = 1; i < path.length; i++){
+        //         ctx.lineTo(path[i].x,path[i].y);
+        //     }
+        //     ctx.stroke();
+        // }
     }
 
     function download(dataUrl, filename) {
@@ -60,6 +88,9 @@ export function Body(){
         link.href = dataUrl;
         link.download = filename;
         link.click();
+    }
+    function setSteps(stepsParam){
+        steps = stepsParam
     }
 
 
@@ -73,7 +104,7 @@ export function Body(){
                     Main menu
                 </nav>
                 <main>
-                    < Canvas width={window.innerWidth -800} height={window.innerHeight} color={color} inputWidth={strokeWidth}/>
+                    < Canvas width={window.innerWidth -800} height={window.innerHeight} color={color} inputWidth={strokeWidth} steps={steps} setSteps={setSteps} pathHistory={pathHistory}/>
                 </main>
                 <aside>
                     <span onClickCapture={e => {
@@ -84,6 +115,8 @@ export function Body(){
                             setDontShow2(true)
                             setDontShow3(true)
                             setDontShow4(true)
+                            document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
+                            document.querySelector('.svg-icon-pen').classList.add("highlighted")
                             if(document.querySelector('div.p-colorpicker-panel')) {
                                 document.querySelector('div.p-colorpicker-panel').style.display = "none"
                             }
@@ -101,6 +134,8 @@ export function Body(){
                             setDontShow2(false)
                             setDontShow3(true)
                             setDontShow4(true)
+                            document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
+                            document.querySelector('.svg-icon-pen').classList.add("highlighted")
                             if(document.querySelector('div.p-colorpicker-panel')) {
                                 document.querySelector('div.p-colorpicker-panel').style.display = "none"
                             }
@@ -119,6 +154,8 @@ export function Body(){
                             setDontShow2(true)
                             setDontShow3(false)
                             setDontShow4(true)
+                            document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
+                            document.querySelector('.svg-icon-pen').classList.add("highlighted")
                             if(document.querySelector('div.p-colorpicker-panel')) {
                                 document.querySelector('div.p-colorpicker-panel').style.display = "none"
                             }
@@ -137,6 +174,8 @@ export function Body(){
                             setDontShow2(true)
                             setDontShow3(true)
                             setDontShow4(false)
+                            document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
+                            document.querySelector('.svg-icon-pen').classList.add("highlighted")
                             if(document.querySelector('div.p-colorpicker-panel')) {
                                 document.querySelector('div.p-colorpicker-panel').style.display = "none"
                             }
@@ -177,7 +216,10 @@ export function Body(){
                             d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
                     </svg>
 
-                    <svg className="svg-icon-undo" viewBox="0 0 20 20">
+                    <svg className="svg-icon-undo" viewBox="0 0 20 20" onClick={e =>{
+                        steps += 1
+                        drawPaths(pathHistory, steps)
+                    }}>
                         <path
                             d="M3.24,7.51c-0.146,0.142-0.146,0.381,0,0.523l5.199,5.193c0.234,0.238,0.633,0.064,0.633-0.262v-2.634c0.105-0.007,0.212-0.011,0.321-0.011c2.373,0,4.302,1.91,4.302,4.258c0,0.957-0.33,1.809-1.008,2.602c-0.259,0.307,0.084,0.762,0.451,0.572c2.336-1.195,3.73-3.408,3.73-5.924c0-3.741-3.103-6.783-6.916-6.783c-0.307,0-0.615,0.028-0.881,0.063V2.575c0-0.327-0.398-0.5-0.633-0.261L3.24,7.51 M4.027,7.771l4.301-4.3v2.073c0,0.232,0.21,0.409,0.441,0.366c0.298-0.056,0.746-0.123,1.184-0.123c3.402,0,6.172,2.709,6.172,6.041c0,1.695-0.718,3.24-1.979,4.352c0.193-0.51,0.293-1.045,0.293-1.602c0-2.76-2.266-5-5.046-5c-0.256,0-0.528,0.018-0.747,0.05C8.465,9.653,8.328,9.81,8.328,9.995v2.074L4.027,7.771z"></path>
                     </svg>
