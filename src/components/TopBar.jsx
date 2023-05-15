@@ -26,7 +26,7 @@ export function TopBar(props){
             </div>
             <div className="right-side"><p>{username}<span id="logout-icon">
                 <img className="icon" onClick= {event => {localStorage.removeItem("user"); props.function("")}}
-                                                                                  src="../../assets/logout.svg"
+                                                                                  src="src/assets/logout.svg"
                                                                                   alt="Ikonka pro odhlášení"/></span></p></div>
             <button onClick = {event => {
                     menuVisible = !menuVisible;
