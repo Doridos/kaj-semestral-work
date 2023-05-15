@@ -30,7 +30,6 @@ const Canvas = ({
 
         ctx.fillStyle = color;
         ctx.beginPath();
-        // ctx.arc(start.x, start.y, width / 2, 0, Math.PI * 2);
         ctx.fill();
 
     }

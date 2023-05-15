@@ -6,7 +6,11 @@
 
 .svg-icon path,
 .svg-icon polygon,
-.svg-icon rect {
+.svg-icon rect,
+.svg-icon-pen,
+.svg-icon-undo,
+.svg-icon-redo,
+.svg-icon-eraser{
     fill: #4691f6;
 }
 

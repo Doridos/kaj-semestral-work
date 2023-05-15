@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState} from "react";
 
 export function useOnDraw(onDraw){
 
@@ -10,6 +10,7 @@ export function useOnDraw(onDraw){
     const mouseDownListenerRef = useRef(null)
     const mouseUpListenerRef = useRef(null)
     const previousPointRef = useRef(null)
+    const [init, setInit] = useState(true);
 
     useState(() => {
         return () => {
@@ -27,6 +28,13 @@ export function useOnDraw(onDraw){
             canvasRef.current.removeEventListener('mousedown', mouseDownListenerRef.current)
         }
         canvasRef.current = reference;
+        if(init){
+            let ctx = canvasRef.current.getContext("2d");
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            console.log(canvasRef.current)
+            setInit(false)
+        }
         initMouseMoveListener()
         initMouseDownListener()
         initMouseUpListener()

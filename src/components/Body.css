@@ -148,7 +148,48 @@ hr{
     border-radius: 10px;
     background-color: whitesmoke;
 }
-hr.below-thickness{
+hr.below-thickness {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.svg-icon-undo:hover,
+.svg-icon-redo:hover,
+.svg-icon-pen:hover,
+.svg-icon-eraser:hover {
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px !important;
+}
+.svg-icon-undo,
+.svg-icon-redo{
+    min-width: 2em;
+    height: 2em;
+    margin-right: 0.3em;
+    margin-left: 0.3em;
+    border-radius: 10px;
 
-    margin-top: 10px
+}
+.svg-icon-eraser{
+    min-width: 2em;
+    height: 2em;
+    margin-right: 0.3em;
+    margin-left: 0.1em;
+    border-radius: 10px;
+    padding-left: 5px;
+    padding-top: 3px;
+}
+.svg-icon-pen{
+    min-width: 2em;
+    height: 2em;
+    margin-right: 0.3em;
+    margin-left: 0.7em;
+    border-radius: 10px;
+    padding-left: 5px;
+    padding-top: 3px;
+}
+.highlighted{
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    background-color: rgba(211, 211, 211, 0.5);
+}
+.no-box-shadow{
+    box-shadow: none;
 }
