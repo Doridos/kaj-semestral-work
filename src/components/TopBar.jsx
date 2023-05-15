@@ -1,5 +1,6 @@
 import React from "react";
 import './TopBar.css'
+import logoutImage from '../images/logout.svg'
 
 export function TopBar(props){
     let username = props.username;
@@ -25,7 +26,7 @@ export function TopBar(props){
             </div>
             <div className="right-side"><p>{username}<span id="logout-icon">
                 <img className="icon" onClick= {event => {localStorage.removeItem("user"); props.function("")}}
-                                                                                  src="logout.svg"
+                                                                                  src={logoutImage}
                                                                                   alt="Ikonka pro odhlášení"/></span></p></div>
             <button onClick = {event => {
                     menuVisible = !menuVisible;
