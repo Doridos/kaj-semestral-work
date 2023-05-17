@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import "primereact/resources/themes/lara-light-blue/theme.css"
+import "./theme.css"
 import "primereact/resources/primereact.min.css"
 import './Body.css'
 import Canvas, {redoStep} from "./Canvas.jsx";
@@ -76,11 +76,9 @@ export function Body(){
 
                     Main menu
                 </nav>
-                <main>
                     < Canvas width={794} height={1123} color={color} inputWidth={strokeWidth} steps={steps} setSteps={setSteps} pathHistory={pathHistory}/>
-                </main>
                 <aside>
-                    <span onClickCapture={e => {
+                    <div className="colorPicker" onClickCapture={e => {
                         document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
                         document.querySelector('.svg-icon-pen').classList.add("highlighted")
                         if(document.querySelector('div.p-colorpicker-panel')) {
@@ -98,8 +96,8 @@ export function Body(){
                     }}><ColorPicker value={colorPicker1} onChange={(e) =>
                     {setColorPicker1("#" + e.value)
                         setColor("#" + e.value)
-                    }} /></span>
-                    <span onClickCapture={e => {
+                    }} /></div>
+                    <div className="colorPicker" onClickCapture={e => {
                         document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
                         document.querySelector('.svg-icon-pen').classList.add("highlighted")
                         if(document.querySelector('div.p-colorpicker-panel')) {
@@ -117,9 +115,9 @@ export function Body(){
                     }}><ColorPicker value={colorPicker2} onChange={(e) =>
                     {setColorPicker2("#" + e.value)
                         setColor("#" + e.value)
-                    }} /></span>
+                    }} /></div>
 
-                    <span onClickCapture={e => {
+                    <div className="colorPicker" onClickCapture={e => {
                         document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
                         document.querySelector('.svg-icon-pen').classList.add("highlighted")
                         if(document.querySelector('div.p-colorpicker-panel')) {
@@ -137,9 +135,9 @@ export function Body(){
                     }}><ColorPicker value={colorPicker3} onChange={(e) =>
                     {setColorPicker3("#" + e.value)
                         setColor("#" + e.value)
-                    }} /></span>
+                    }} /></div>
 
-                    <span onClickCapture={e => {
+                    <div className="colorPicker" onClickCapture={e => {
                         document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
                         document.querySelector('.svg-icon-pen').classList.add("highlighted")
                         if(document.querySelector('div.p-colorpicker-panel')) {
@@ -157,7 +155,7 @@ export function Body(){
                     }}><ColorPicker value={colorPicker4} onChange={(e) =>
                     {setColorPicker4("#" + e.value)
                         setColor("#" + e.value)
-                    }} /></span>
+                    }} /></div>
 
                     <hr/>
 
