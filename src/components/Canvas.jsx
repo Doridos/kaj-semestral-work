@@ -1,28 +1,19 @@
 import './Canvas.css'
 import {useOnDraw} from './Hooks.jsx'
+
+let history = [];
+let steps = -1;
 const Canvas = ({
     width,
     height,
     color,
-    inputWidth,
-    setSteps,
-    steps,
-    pathHistory
+    inputWidth
 }) => {if(width !== undefined && height !== undefined){
-    const setCanvasRef = useOnDraw(onDraw,rememberPath)
+
+
+    const setCanvasRef = useOnDraw(onDraw)
     function onDraw(ctx, point, previousPoint){
         drawLine(previousPoint, point, ctx, color, inputWidth)
-    }
-    function rememberPath(ctx){
-        ctx.save()
-        // if(pathHistory.length >0){
-        //     if(path.toString() !== "" && pathHistory[pathHistory.length-1].toString() !== path.toString()){
-        //         pathHistory.push(path)
-        //     }
-        // }
-        // else {
-        //     pathHistory.push(path)
-        // }
     }
 
     function drawLine(start,
@@ -50,8 +41,35 @@ const Canvas = ({
     return <canvas width={width}
                    height={height}
                    ref={setCanvasRef}
+                   onMouseUp={event => {
+                       addStep()
+                   }}
     ></canvas>
 }
+}
 
+export function undoStep() {
+    if (steps > 0) {
+        const ctx = document.querySelector('canvas').getContext("2d");
+        steps--;
+        let restorePicture = new Image();
+        restorePicture.src = history[steps];
+        restorePicture.onload = function () { ctx.drawImage(restorePicture, 0, 0); }
+    }
+}
+export function redoStep() {
+    if (steps < history.length-1) {
+        const ctx = document.querySelector('canvas').getContext("2d");
+        steps++;
+        let restorePicture = new Image();
+        restorePicture.src = history[steps];
+        restorePicture.onload = function () { ctx.drawImage(restorePicture, 0, 0); }
+    }
+}
+export function addStep() {
+    steps++;
+    if (steps < history.length) { history.length = steps; }
+    history.push(document.querySelector('canvas').toDataURL());
+    document.title = steps + ":" + history.length;
 }
 export default Canvas;

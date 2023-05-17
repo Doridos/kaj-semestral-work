@@ -1,4 +1,5 @@
 import {useRef, useState} from "react";
+import {addStep} from "./Canvas.jsx";
 
 export function useOnDraw(onDraw, rememberPath){
 
@@ -36,6 +37,7 @@ export function useOnDraw(onDraw, rememberPath){
             ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
             setInit(false)
             document.querySelector('.svg-icon-pen').classList.add("highlighted")
+            addStep()
         }
         initMouseMoveListener()
         initMouseDownListener()
@@ -49,7 +51,6 @@ export function useOnDraw(onDraw, rememberPath){
                 const ctx = canvasRef.current.getContext('2d')
                 if(onDraw) onDraw(ctx, point, previousPointRef.current)
                 previousPointRef.current = point
-                pointsOfPath.push({x:previousPointRef.current.x, y:previousPointRef.current.y})
             }
         }
         mouseMoveListenerRef.current = mouseMoveListener
@@ -70,8 +71,6 @@ export function useOnDraw(onDraw, rememberPath){
             isDrawingRef.current = false;
             previousPointRef.current = null
             if(rememberPath) rememberPath()
-            pointsOfPath = []
-
         }
         mouseUpListenerRef.current = listener
         window.addEventListener('mouseup', listener)
