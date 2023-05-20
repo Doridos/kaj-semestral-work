@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import "./theme.css"
 import "primereact/resources/primereact.min.css"
 import './Body.css'
-import Canvas, {redoStep} from "./Canvas.jsx";
+import Canvas, {activateTextInput, addImage, addStep, deactivateTextInput, emptyHistory, redoStep} from "./Canvas.jsx";
 import {ColorPicker} from "primereact/colorpicker";
 import {undoStep} from "./Canvas.jsx";
 function Slider({ value, min, max, step, onChange }) {
@@ -42,11 +42,20 @@ export function Body(){
         setLastColor(color)
         setColor("#FFFFFF")
         document.querySelector('.svg-icon-pen').classList.remove("highlighted")
+        document.querySelector('.text').classList.remove("highlighted")
         document.querySelector('.svg-icon-eraser').classList.add("highlighted")
+    }
+    function highlightText(){
+        setLastColor(color)
+        setColor("#FFFFFF")
+        document.querySelector('.svg-icon-pen').classList.remove("highlighted")
+        document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
+        document.querySelector('.text').classList.add("highlighted")
     }
     function highlightPen(){
         setColor(lastColor ==="none" ? "#000000" : lastColor)
         document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
+        document.querySelector('.text').classList.remove("highlighted")
         document.querySelector('.svg-icon-pen').classList.add("highlighted")
 
     }
@@ -56,7 +65,9 @@ export function Body(){
             const canvas = document.querySelector('canvas');
             const ctx = canvas.getContext("2d");
             ctx.fillStyle = "white";
+            emptyHistory()
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            addStep()
         }
     }
 
@@ -172,6 +183,7 @@ export function Body(){
 
 
                     <svg className="svg-icon-pen" viewBox="0 0 20 20" onClick={e => {
+                        deactivateTextInput()
                         highlightPen()
 
                     }
@@ -181,10 +193,23 @@ export function Body(){
                     </svg>
 
                     <svg className="svg-icon-eraser" viewBox="0 0 20 20" onClick= {e => {
+                        deactivateTextInput()
                         highlightEraser()
                     }}>
                         <path
                             d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
+                    </svg>
+
+                    <svg className="svg-icon-pen text" viewBox="0 0 20 20" onClick={event => {activateTextInput()
+                    highlightText()}}>
+                        <path
+                        d="M5 2a.5.5 0 0 1 .5-.5c.862 0 1.573.287 2.06.566.174.099.321.198.44.286.119-.088.266-.187.44-.286A4.165 4.165 0 0 1 10.5 1.5a.5.5 0 0 1 0 1c-.638 0-1.177.213-1.564.434a3.49 3.49 0 0 0-.436.294V7.5H9a.5.5 0 0 1 0 1h-.5v4.272c.1.08.248.187.436.294.387.221.926.434 1.564.434a.5.5 0 0 1 0 1 4.165 4.165 0 0 1-2.06-.566A4.561 4.561 0 0 1 8 13.65a4.561 4.561 0 0 1-.44.285 4.165 4.165 0 0 1-2.06.566.5.5 0 0 1 0-1c.638 0 1.177-.213 1.564-.434.188-.107.335-.214.436-.294V8.5H7a.5.5 0 0 1 0-1h.5V3.228a3.49 3.49 0 0 0-.436-.294A3.166 3.166 0 0 0 5.5 2.5.5.5 0 0 1 5 2zm3.352 1.355zm-.704 9.29z"/>
+                    </svg>
+                    <svg
+                         className="svg-icon-eraser img" viewBox="0 0 22 20" onClick={event => addImage()}>
+                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                        <path
+                            d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
                     </svg>
 
                     <svg className="svg-icon-undo" viewBox="0 0 20 20" onClick={e =>

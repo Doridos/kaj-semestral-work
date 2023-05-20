@@ -6,3 +6,15 @@ canvas{
 canvas:hover{
     cursor: crosshair;
 }
+#input-text{
+    border: dashed;
+    background-color: transparent;
+
+}
+#input-text:focus{
+    outline: none;
+    background-color: transparent;
+}
+.new-image{
+    border: 1px solid red;
+}

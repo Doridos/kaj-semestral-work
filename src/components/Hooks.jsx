@@ -13,8 +13,6 @@ export function useOnDraw(onDraw, rememberPath){
     const previousPointRef = useRef(null)
     const [init, setInit] = useState(true);
 
-    let pointsOfPath = []
-
     useState(() => {
         return () => {
             if(mouseMoveListenerRef.current){
