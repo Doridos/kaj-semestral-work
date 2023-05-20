@@ -5,7 +5,7 @@ let history = [];
 let steps = -1;
 let isTextInputMode = false;
 let isDragging = false;
-let isImageInputMode = true;
+let isImageInputMode = false;
 const Canvas = ({
     width,
     height,
@@ -16,7 +16,7 @@ const Canvas = ({
 
     const setCanvasRef = useOnDraw(onDraw)
     function onDraw(ctx, point, previousPoint){
-        if (!isDragging){
+        if (!isDragging && !isImageInputMode){
             drawLine(previousPoint, point, ctx, color, inputWidth)
         }
 
@@ -50,7 +50,7 @@ const Canvas = ({
                    onClick={e => {renderText(e)
                    }}
                    onMouseUp={event => {
-                       if(!isTextInputMode) {
+                       if(!isTextInputMode && !isImageInputMode) {
                            addStep()
                        }
                    }}
@@ -65,7 +65,7 @@ function renderText(e){
         input.type = "text";
         input.id = "input-text"
         input.style.position = "absolute";
-        input.style.top = e.clientY + 35 + "px";
+        input.style.top = e.clientY + "px";
         input.style.left = e.clientX + "px";
 
         input.addEventListener("keydown", function(event) {
@@ -122,11 +122,28 @@ export function deactivateTextInput(){
     isTextInputMode = false
     document.querySelector('canvas').style.cursor = "crosshair"
 }
+
+export function activateImageInput(){
+    isImageInputMode = true
+    document.querySelector('canvas').style.cursor = "crosshair"
+}
+export function deactivateImageInput(){
+    isImageInputMode = false
+    document.querySelector('canvas').style.cursor = "crosshair"
+}
 export function emptyHistory(){
     history = []
     steps = -1
 }
+
 export function addImage() {
+    document.addEventListener("mousedown", e =>{
+        if(isImageInputMode && !isDragging){
+            e.stopPropagation()
+            alert("You have to place your image!")
+        }
+    })
+    isImageInputMode = true
     deactivateTextInput()
     const restorePicture = new Image();
     restorePicture.src = history[steps];
@@ -144,7 +161,11 @@ export function addImage() {
             img.onload = function () {
                 const canvas = document.querySelector("canvas");
                 const ctx = canvas.getContext("2d");
-
+                const rect = canvas.getBoundingClientRect()
+                const span = document.createElement("span")
+                span.classList.add("info")
+                span.innerText = "Hint \n To place the image you have to move it and then \n the border will disappear."
+                document.body.append(span)
                 let offsetX = 0;
                 let offsetY = 0;
 
@@ -152,7 +173,6 @@ export function addImage() {
                     if (!isDragging) {
                         let mouseX = e.clientX - canvas.offsetLeft;
                         let mouseY = e.clientY - canvas.offsetTop;
-
                         if (
                             mouseX >= offsetX &&
                             mouseX <= offsetX + img.width &&
@@ -184,25 +204,30 @@ export function addImage() {
 
                         let finalX = offsetX < 0 ? 0 : offsetX;
                         let finalY = offsetY < 0 ? 0 : offsetY;
+                        ctx.strokeRect(offsetX, offsetY, img.width, img.height)
                         ctx.drawImage(restorePicture, 0, 0)
                         ctx.drawImage(img, finalX, finalY);
                         canvas.style.cursor = "crosshair"
+                        if(document.querySelector('.info')){
+                            document.body.removeChild(span)
+                            canvas.onmouseup = null
+                            canvas.onmousedown = null
+                            canvas.onmousemove = null
+                        }
 
+                        isImageInputMode = false
                     }
-                    canvas.onmousedown = null;
-                    canvas.onmousemove = null;
-                    canvas.onmouseup = null;
                 };
-                ctx.drawImage(img, 0, 0);
                 ctx.strokeRect(offsetX, offsetY, img.width, img.height)
+                ctx.drawImage(img, 0, 0);
             };
             img.src = event.target.result;
         };
-
         reader.readAsDataURL(file);
     };
 
     fileInput.click();
 }
+
 
 export default Canvas;
