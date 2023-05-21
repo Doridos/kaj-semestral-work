@@ -34,15 +34,13 @@ export function Body(){
     const [colorPicker3, setColorPicker3] = useState("#4691f6");
     const [colorPicker4, setColorPicker4] = useState("#f5942f");
     const [lastColor, setLastColor] = useState("none");
-    const [steps, setSteps] = useState(-1);
+
 
 
     const [dontShow1, setDontShow1] = useState(true);
     const [dontShow2, setDontShow2] = useState(true);
     const [dontShow3, setDontShow3] = useState(true);
     const [dontShow4, setDontShow4] = useState(true);
-
-    let pathHistory = []
 
 
 
@@ -63,6 +61,7 @@ export function Body(){
         document.querySelector('.text').classList.add("highlighted")
     }
     function highlightPen(){
+        deactivateTextInput()
         setColor(lastColor ==="none" ? "#000000" : lastColor)
         document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
         document.querySelector('.text').classList.remove("highlighted")
@@ -105,11 +104,10 @@ export function Body(){
 
                     Main menu
                 </nav>
-                    < Canvas width={794} height={1123} color={color} inputWidth={strokeWidth} steps={steps} setSteps={setSteps} pathHistory={pathHistory}/>
+                    < Canvas width={794} height={1123} color={color} inputWidth={strokeWidth} />
                 <aside>
                     <div className="colorPicker" onClickCapture={e => {
-                        document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
-                        document.querySelector('.svg-icon-pen').classList.add("highlighted")
+                        highlightPen()
                         if(document.querySelector('div.p-colorpicker-panel')) {
                             document.querySelector('div.p-colorpicker-panel').style.display = "none"
                         }
@@ -127,8 +125,7 @@ export function Body(){
                         setColor("#" + e.value)
                     }} /></div>
                     <div className="colorPicker" onClickCapture={e => {
-                        document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
-                        document.querySelector('.svg-icon-pen').classList.add("highlighted")
+                        highlightPen()
                         if(document.querySelector('div.p-colorpicker-panel')) {
                             document.querySelector('div.p-colorpicker-panel').style.display = "none"
                         }
@@ -147,8 +144,7 @@ export function Body(){
                     }} /></div>
 
                     <div className="colorPicker" onClickCapture={e => {
-                        document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
-                        document.querySelector('.svg-icon-pen').classList.add("highlighted")
+                        highlightPen()
                         if(document.querySelector('div.p-colorpicker-panel')) {
                             document.querySelector('div.p-colorpicker-panel').style.display = "none"
                         }
@@ -167,8 +163,7 @@ export function Body(){
                     }} /></div>
 
                     <div className="colorPicker" onClickCapture={e => {
-                        document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
-                        document.querySelector('.svg-icon-pen').classList.add("highlighted")
+                        highlightPen()
                         if(document.querySelector('div.p-colorpicker-panel')) {
                             document.querySelector('div.p-colorpicker-panel').style.display = "none"
                         }
@@ -228,6 +223,7 @@ export function Body(){
                          className="svg-icon-eraser img" viewBox="0 0 22 20" onClick={event => {
                             highlightImage()
                             addImage()
+                            setColor("#000000")
                          }}>
                         <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                         <path

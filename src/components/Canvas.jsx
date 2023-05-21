@@ -1,5 +1,6 @@
 import './Canvas.css'
 import {useOnDraw} from './Hooks.jsx'
+import {createNotebook, deleteDB, getFromNotebook, storeToNotebook} from "./indexedDB.jsx";
 
 let history = [];
 let steps = -1;
@@ -77,6 +78,10 @@ function renderText(e){
                 if(document.body.querySelector('#input-text')){
                     document.body.removeChild(input);
                 }
+                if(document.querySelector('.info')) {
+                    const span = document.querySelector('.info')
+                    document.body.removeChild(span)
+                }
                 addStep()
             }
         });
@@ -91,6 +96,7 @@ function renderText(e){
     }
 }
 export function undoStep() {
+    getFromNotebook("test",1)
     if (steps > 0) {
         const ctx = document.querySelector('canvas').getContext("2d");
         steps--;
@@ -100,6 +106,7 @@ export function undoStep() {
     }
 }
 export function redoStep() {
+    deleteDB()
     if (steps < history.length-1) {
         const ctx = document.querySelector('canvas').getContext("2d");
         steps++;
@@ -109,12 +116,18 @@ export function redoStep() {
     }
 }
 export function addStep() {
+    createNotebook("test")
+    storeToNotebook("test",1)
     steps++;
     if (steps < history.length) { history.length = steps; }
     history.push(document.querySelector('canvas').toDataURL());
 }
 
 export function activateTextInput(){
+    const span = document.createElement("span")
+    span.classList.add("info")
+    span.innerText = "Hint \n Click anywhere on canvas \n and enter the text."
+    document.body.append(span)
     isTextInputMode = true
     document.querySelector('canvas').style.cursor = "text"
 }
@@ -137,12 +150,11 @@ export function emptyHistory(){
 }
 
 export function addImage() {
-    document.addEventListener("mousedown", e =>{
-        if(isImageInputMode && !isDragging){
-            e.stopPropagation()
-            alert("You have to place your image!")
-        }
-    })
+    if(document.querySelector('.info')) {
+        const span = document.querySelector('.info')
+        document.body.removeChild(span)
+    }
+
     isImageInputMode = true
     deactivateTextInput()
     const restorePicture = new Image();
@@ -156,9 +168,13 @@ export function addImage() {
         const file = e.target.files[0];
         const reader = new FileReader();
 
+
+
         reader.onload = function (event) {
             const img = new Image();
             img.onload = function () {
+
+
                 const canvas = document.querySelector("canvas");
                 const ctx = canvas.getContext("2d");
                 const rect = canvas.getBoundingClientRect()
@@ -185,6 +201,20 @@ export function addImage() {
                 };
 
                 canvas.onmousemove = function (e) {
+                    let mouseX = e.clientX - canvas.offsetLeft;
+                    let mouseY = e.clientY - canvas.offsetTop;
+                    if (
+                        mouseX >= offsetX &&
+                        mouseX <= offsetX + img.width &&
+                        mouseY >= offsetY &&
+                        mouseY <= offsetY + img.height
+                    ) {
+                        canvas.style.cursor = "grab"
+                    }
+                    else {
+                        canvas.style.cursor = "crosshair"
+                    }
+
                     if (isDragging) {
                         let mouseX = e.clientX - canvas.offsetLeft;
                         let mouseY = e.clientY - canvas.offsetTop;
@@ -193,7 +223,7 @@ export function addImage() {
                         offsetY = mouseY - img.height / 2;
                         ctx.drawImage(restorePicture, 0, 0)
                         ctx.strokeRect(offsetX, offsetY, img.width, img.height)
-                        canvas.style.cursor = "grab"
+                        canvas.style.cursor = "grabbing"
                         ctx.drawImage(img, offsetX, offsetY);
                     }
                 };
@@ -214,16 +244,32 @@ export function addImage() {
                             canvas.onmousedown = null
                             canvas.onmousemove = null
                         }
-
                         isImageInputMode = false
+
+                        document.onmousedown = null
+                        document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
+                        document.querySelector('.text').classList.remove("highlighted")
+                        document.querySelector('.svg-icon-eraser.img').classList.remove("highlighted")
+                        document.querySelector('.svg-icon-pen').classList.add("highlighted")
                     }
                 };
                 ctx.strokeRect(offsetX, offsetY, img.width, img.height)
                 ctx.drawImage(img, 0, 0);
             };
             img.src = event.target.result;
+
         };
-        reader.readAsDataURL(file);
+        if(file){
+            document.onmousedown =  e =>{
+                if(isImageInputMode && !isDragging){
+                    e.stopPropagation()
+                    alert("You have to place your image!")
+                }
+            }
+
+            reader.readAsDataURL(file);
+        }
+
     };
 
     fileInput.click();
