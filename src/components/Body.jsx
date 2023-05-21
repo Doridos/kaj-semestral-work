@@ -3,17 +3,18 @@ import "./theme.css"
 import "primereact/resources/primereact.min.css"
 import './Body.css'
 import Canvas, {
+    activateImageInput,
     activateTextInput,
-    addImage,
+    addImage, addNewPage,
     addStep,
     deactivateImageInput,
     deactivateTextInput,
     emptyHistory,
-    redoStep
+    redoStep, restorePage, setPageCanvas
 } from "./Canvas.jsx";
 import {ColorPicker} from "primereact/colorpicker";
 import {undoStep} from "./Canvas.jsx";
-import {getFromNotebook, getPagesCount, storeToNotebook} from "./indexedDB.jsx";
+import {deleteDB, getFromNotebook, getPagesCount, storeToNotebook} from "./indexedDB.jsx";
 function Slider({ value, min, max, step, onChange }) {
     return (
         <input
@@ -29,6 +30,7 @@ function Slider({ value, min, max, step, onChange }) {
 
 
 
+
 export function Body() {
     const [strokeWidth, setStrokeWidth] = useState("none");
     const [color, setColor] = useState("none");
@@ -40,10 +42,12 @@ export function Body() {
     const [page, setPage] = useState(1)
 
     const [pagesCount, setPagesCount] = useState(null);
-
     useEffect(() => {
         getPagesCount("test")
             .then((result) => {
+                if(result === 0){
+                    result = 1
+                }
                 setPagesCount(result);
             })
             .catch((error) => {
@@ -112,13 +116,16 @@ export function Body() {
     function incrementPage(){
         if(page+1 <= pagesCount) {
             setPage(page+1)
+            setPageCanvas(page+1)
         }
     }
     function decrementPage(){
         if(page-1 >= 1){
             setPage(page-1)
+            setPageCanvas(page-1)
         }
     }
+
 
 
     return (
@@ -131,17 +138,30 @@ export function Body() {
                     Main menu
                 </nav>
                     < Canvas width={794} height={1123} color={color} inputWidth={strokeWidth} />
+                <aside className="connection-status hide">
+                    <p >You are offline automatic saving is turned off.</p>
+                </aside>
                 <aside className="pages">
                     <p className="count"><span className="arrow" onClick={event => {
                         decrementPage()
+                        console.log(page)
+                        if(page-1 >= 1) {
+                            restorePage(page-1)
+                        }
+
 
                     }}>&#8249;</span>{page}/{pagesCount !== null ? pagesCount : ""}<span className="arrow" onClick={event => {
                         incrementPage()
-                        storeToNotebook("test", 1, document.querySelector('canvas').toDataURL())
+                        if(page +1 <= pagesCount) {
+                            restorePage(page+1)
+                        }
 
                     }}>&#8250;</span></p>
+
                     <svg className="svg-icon-undo add-new-page" viewBox="0 0 20 20" onClick={event => {
                         setPage(pagesCount+1)
+                        setPageCanvas(pagesCount+1)
+                        storeToNotebook("test", page, document.querySelector('canvas').toDataURL())
                         addNewPage(pagesCount+1)
                         setPagesCount(pagesCount+1)}}>
                         <path
@@ -265,6 +285,7 @@ export function Body() {
                     </svg>
                     <svg
                          className="svg-icon-eraser img" viewBox="0 0 22 20" onClick={event => {
+                         activateImageInput()
                             highlightImage()
                             addImage()
                             setColor("#000000")
@@ -297,6 +318,7 @@ export function Body() {
                     </svg>
 
                     <svg className="svg-icon-undo" viewBox="0 0 20 20" onClick={e => {
+                        deleteDB()
                         deleteCanvas()
                     }}>
                         <path

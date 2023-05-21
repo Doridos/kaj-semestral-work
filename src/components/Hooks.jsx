@@ -30,10 +30,9 @@ export function useOnDraw(onDraw, rememberPath){
             canvasRef.current.removeEventListener("mousedown", mouseDownListenerRef.current);
         }
         canvasRef.current = reference;
-
         if (init) {
             let ctx = canvasRef.current.getContext("2d");
-            createNotebook("test");
+
 
             getFromNotebook("test", 1)
                 .then((imageData) => {

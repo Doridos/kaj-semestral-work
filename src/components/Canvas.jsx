@@ -7,7 +7,6 @@ let steps = -1;
 let isTextInputMode = false;
 let isDragging = false;
 let isImageInputMode = false;
-let page = 1;
 let canvas
 let ctx
     window.addEventListener("load", e => {
@@ -15,6 +14,44 @@ let ctx
     ctx = canvas.getContext("2d");
 })
 
+let intervalId; // Variable to store the interval reference
+let pageForSave = 1
+let allowedToSave = true
+function logOnline() {
+    intervalId = setInterval(function() {
+        document.querySelector('aside.connection-status').classList.add("hide")
+        console.log("Online");
+        console.log(pageForSave)
+        if(allowedToSave){
+            storeToNotebook('test', pageForSave, document.querySelector('canvas').toDataURL())
+        }
+    }, 3000);
+}
+
+function logDisconnected() {
+    console.log("Disconnected");
+    document.querySelector('aside.connection-status').classList.remove("hide")
+    clearInterval(intervalId); // Clear the interval
+    intervalId = undefined; // Reset the interval reference
+
+}
+
+function handleConnectionStatus() {
+    if (navigator.onLine) {
+        if (!intervalId) {
+            logOnline();
+        }
+    } else {
+        logDisconnected();
+    }
+}
+
+// Add event listeners for online and offline events
+window.addEventListener("online", handleConnectionStatus);
+window.addEventListener("offline", handleConnectionStatus);
+
+// Check initial connection status
+handleConnectionStatus();
 
 
 
@@ -72,6 +109,7 @@ function renderText(e){
     const canvas = document.querySelector('canvas');
     const ctx = canvas.getContext("2d");
     if (isTextInputMode) {
+        allowedToSave = false
         let input = document.createElement("input");
         input.type = "text";
         input.id = "input-text"
@@ -81,6 +119,7 @@ function renderText(e){
 
         input.addEventListener("keydown", function(event) {
             if (event.key === "Enter" || event.key === "Escape") { // Enter key
+                allowedToSave = true
                 event.preventDefault();
                 ctx.font = "15px Helvetica";
                 ctx.fillStyle = "black";
@@ -96,9 +135,11 @@ function renderText(e){
             }
         });
         input.addEventListener("focusout", e => {
-            if(input.value === ""){
-                document.body.removeChild(input);
-            }
+            setTimeout(() => {
+                if (document.body.querySelector("#input-text")) {
+                    document.body.removeChild(input);
+                }
+            }, 0);
         })
 
         document.body.appendChild(input);
@@ -117,7 +158,7 @@ export function undoStep() {
     }
 }
 export function redoStep() {
-    deleteDB()
+    // deleteDB()
     if (steps < history.length-1) {
         steps++;
         let restorePicture = new Image();
@@ -138,6 +179,7 @@ export function addStep() {
 }
 
 export function activateTextInput(){
+    allowedToSave = false
     const span = document.createElement("span")
     span.classList.add("info")
     span.innerText = "Hint \n Click anywhere on canvas \n and enter the text."
@@ -146,15 +188,18 @@ export function activateTextInput(){
     document.querySelector('canvas').style.cursor = "text"
 }
 export function deactivateTextInput(){
+    allowedToSave = true
     isTextInputMode = false
     document.querySelector('canvas').style.cursor = "crosshair"
 }
 
 export function activateImageInput(){
+    allowedToSave = false
     isImageInputMode = true
     document.querySelector('canvas').style.cursor = "crosshair"
 }
 export function deactivateImageInput(){
+    allowedToSave = true
     isImageInputMode = false
     document.querySelector('canvas').style.cursor = "crosshair"
 }
@@ -288,14 +333,33 @@ export function addImage() {
 
     fileInput.click();
 }
-// export function addNewPage(page){
-//     const canvas = document.querySelector('canvas')
-//     const ctx = canvas.getContext('2d')
-//     ctx.fillStyle = "white";
-//     ctx.fillRect(0, 0, canvas.width, canvas.height);
-//     console.log(page)
-//     storeToNotebook("test", page, document.querySelector('canvas').toDataURL())
-// }
+export function addNewPage(page){
 
+    const canvas = document.querySelector('canvas')
+    const ctx = canvas.getContext('2d')
+    emptyHistory()
+    addStep()
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    console.log(page)
+    storeToNotebook("test", page, document.querySelector('canvas').toDataURL())
+}
+
+export function restorePage(page){
+    emptyHistory()
+    getFromNotebook("test", page)
+        .then((imageData) => {
+            let restorePicture = new Image();
+            restorePicture.src = imageData;
+            restorePicture.onload = function () {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+                ctx.drawImage(restorePicture, 0, 0); // Draw the image
+                addStep();
+            };
+        })
+}
+export function setPageCanvas(page){
+    pageForSave = page
+}
 
 export default Canvas;

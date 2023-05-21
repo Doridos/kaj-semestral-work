@@ -66,6 +66,37 @@ body.menu-visible .menu  {
     border-radius: 20px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
+.page section aside.connection-status {
+    position: fixed;
+    font-size: 8px;
+    top: 10%;
+    transform: translateY(5%);
+    text-align: right;
+    right: 0;
+    opacity: 1;
+    width: 400px;
+    margin-right: 5px;
+    color: gray;
+    height: 5px;
+    box-shadow: none;
+}
+
+.connection-status::before { /* Changed from '::after' to '::before' */
+    content: "";
+    position: absolute;
+    top: 150%;
+    left: 60px; /* Changed from 'right' to 'left' */
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.connection-status:not(.hide)::before { /* Changed from '::after' to '::before' */
+    opacity: 1;
+}
 .small-text{
     font-size: 14px;
     }

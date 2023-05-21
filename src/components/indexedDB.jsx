@@ -87,6 +87,7 @@ export function deleteDB() {
     DBDeleteReq.onsuccess = function (event) {
         console.log("Database deleted successfully")
     }
+    createNotebook("test");
 }
 export async function getPagesCount(name) {
     return new Promise((resolve, reject) => {
