@@ -51,6 +51,45 @@ body.menu-visible .menu  {
     border-radius: 20px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
+.page section aside.pages {
+    margin: 0;
+    position: fixed;
+    top: 23%;
+    transform: translateY(-90%);
+    background-color: white;
+    text-align: center;
+    right: 0;
+    opacity: 1;
+    width: 100px;
+    height: 80px;
+    transition: all 0.5s ease;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+.small-text{
+    font-size: 14px;
+    }
+.hide{
+    display: none;
+}
+.count{
+    font-size: 23px;
+    margin-top: 5px;
+}
+.arrow{
+    color: #4691f6;
+    margin: 5px;
+    border-radius: 20px;
+}
+.arrow:hover{
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+.add-new-page:hover + .hide{
+    display: block;
+    color: gray;
+}
+
 .page footer {
     display: flex;
     align-items: center;
@@ -123,7 +162,7 @@ input[type=range]::-moz-range-thumb {
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    background: #4691f6; /* Set the background color */
+    background: #4691f6;
     cursor: pointer;
 }
 input[type=range]::-moz-range-thumb:hover{

@@ -1,5 +1,6 @@
 import {useRef, useState} from "react";
 import {addStep} from "./Canvas.jsx";
+import {createNotebook, getFromNotebook, storeToNotebook} from "./indexedDB.jsx";
 
 export function useOnDraw(onDraw, rememberPath){
 
@@ -23,23 +24,42 @@ export function useOnDraw(onDraw, rememberPath){
             }
         }
     });
-    function setCanvasReference(reference){
-        if(!reference) return;
-        if(canvasRef.current){
-            canvasRef.current.removeEventListener('mousedown', mouseDownListenerRef.current)
+    function setCanvasReference(reference) {
+        if (!reference) return;
+        if (canvasRef.current) {
+            canvasRef.current.removeEventListener("mousedown", mouseDownListenerRef.current);
         }
         canvasRef.current = reference;
-        if(init){
+
+        if (init) {
             let ctx = canvasRef.current.getContext("2d");
-            ctx.fillStyle = "white";
-            ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-            setInit(false)
-            document.querySelector('.svg-icon-pen').classList.add("highlighted")
-            addStep()
+            createNotebook("test");
+
+            getFromNotebook("test", 1)
+                .then((imageData) => {
+                    let restorePicture = new Image();
+                    restorePicture.src = imageData;
+                    restorePicture.onload = function () {
+                        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height); // Clear the canvas
+                        ctx.drawImage(restorePicture, 0, 0); // Draw the image
+                        addStep();
+                    };
+                })
+                .catch((error) => {
+                    console.log("bbb");
+                    ctx.fillStyle = "white";
+                    ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+                })
+                .finally(() => {
+                    addStep();
+                });
+
+            setInit(false);
+            document.querySelector(".svg-icon-pen").classList.add("highlighted");
         }
-        initMouseMoveListener()
-        initMouseDownListener()
-        initMouseUpListener()
+        initMouseMoveListener();
+        initMouseDownListener();
+        initMouseUpListener();
     }
 
     function initMouseMoveListener(){

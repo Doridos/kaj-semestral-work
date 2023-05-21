@@ -7,13 +7,23 @@ let steps = -1;
 let isTextInputMode = false;
 let isDragging = false;
 let isImageInputMode = false;
+let page = 1;
+let canvas
+let ctx
+    window.addEventListener("load", e => {
+    canvas = document.querySelector('canvas')
+    ctx = canvas.getContext("2d");
+})
+
+
+
+
 const Canvas = ({
     width,
     height,
     color,
     inputWidth
 }) => {if(width !== undefined && height !== undefined){
-
 
     const setCanvasRef = useOnDraw(onDraw)
     function onDraw(ctx, point, previousPoint){
@@ -96,19 +106,19 @@ function renderText(e){
     }
 }
 export function undoStep() {
-    getFromNotebook("test",1)
     if (steps > 0) {
-        const ctx = document.querySelector('canvas').getContext("2d");
         steps--;
         let restorePicture = new Image();
         restorePicture.src = history[steps];
-        restorePicture.onload = function () { ctx.drawImage(restorePicture, 0, 0); }
+        console.log(history)
+        console.log(restorePicture)
+        console.log(steps)
+        restorePicture.onload = function () { ctx.drawImage(restorePicture, 0, 0); console.log("aaaa")}
     }
 }
 export function redoStep() {
     deleteDB()
     if (steps < history.length-1) {
-        const ctx = document.querySelector('canvas').getContext("2d");
         steps++;
         let restorePicture = new Image();
         restorePicture.src = history[steps];
@@ -116,11 +126,15 @@ export function redoStep() {
     }
 }
 export function addStep() {
-    createNotebook("test")
-    storeToNotebook("test",1)
     steps++;
-    if (steps < history.length) { history.length = steps; }
-    history.push(document.querySelector('canvas').toDataURL());
+    if (steps < history.length) {
+        history.splice(steps);
+    }
+    if (document.querySelector("canvas")) {
+        history.push(canvas.toDataURL());
+    }
+
+    console.log(history);
 }
 
 export function activateTextInput(){
@@ -274,6 +288,14 @@ export function addImage() {
 
     fileInput.click();
 }
+// export function addNewPage(page){
+//     const canvas = document.querySelector('canvas')
+//     const ctx = canvas.getContext('2d')
+//     ctx.fillStyle = "white";
+//     ctx.fillRect(0, 0, canvas.width, canvas.height);
+//     console.log(page)
+//     storeToNotebook("test", page, document.querySelector('canvas').toDataURL())
+// }
 
 
 export default Canvas;

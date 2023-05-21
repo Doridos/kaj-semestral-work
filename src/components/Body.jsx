@@ -13,6 +13,7 @@ import Canvas, {
 } from "./Canvas.jsx";
 import {ColorPicker} from "primereact/colorpicker";
 import {undoStep} from "./Canvas.jsx";
+import {getFromNotebook, getPagesCount, storeToNotebook} from "./indexedDB.jsx";
 function Slider({ value, min, max, step, onChange }) {
     return (
         <input
@@ -26,7 +27,9 @@ function Slider({ value, min, max, step, onChange }) {
     );
 }
 
-export function Body(){
+
+
+export function Body() {
     const [strokeWidth, setStrokeWidth] = useState("none");
     const [color, setColor] = useState("none");
     const [colorPicker1, setColorPicker1] = useState("#000000");
@@ -34,14 +37,25 @@ export function Body(){
     const [colorPicker3, setColorPicker3] = useState("#4691f6");
     const [colorPicker4, setColorPicker4] = useState("#f5942f");
     const [lastColor, setLastColor] = useState("none");
+    const [page, setPage] = useState(1)
 
+    const [pagesCount, setPagesCount] = useState(null);
+
+    useEffect(() => {
+        getPagesCount("test")
+            .then((result) => {
+                setPagesCount(result);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
 
 
     const [dontShow1, setDontShow1] = useState(true);
     const [dontShow2, setDontShow2] = useState(true);
     const [dontShow3, setDontShow3] = useState(true);
     const [dontShow4, setDontShow4] = useState(true);
-
 
 
     function highlightEraser(){
@@ -95,6 +109,18 @@ export function Body(){
         link.click();
     }
 
+    function incrementPage(){
+        if(page+1 <= pagesCount) {
+            setPage(page+1)
+        }
+    }
+    function decrementPage(){
+        if(page-1 >= 1){
+            setPage(page-1)
+        }
+    }
+
+
     return (
         <div>
         <div className="page">
@@ -105,6 +131,24 @@ export function Body(){
                     Main menu
                 </nav>
                     < Canvas width={794} height={1123} color={color} inputWidth={strokeWidth} />
+                <aside className="pages">
+                    <p className="count"><span className="arrow" onClick={event => {
+                        decrementPage()
+
+                    }}>&#8249;</span>{page}/{pagesCount !== null ? pagesCount : ""}<span className="arrow" onClick={event => {
+                        incrementPage()
+                        storeToNotebook("test", 1, document.querySelector('canvas').toDataURL())
+
+                    }}>&#8250;</span></p>
+                    <svg className="svg-icon-undo add-new-page" viewBox="0 0 20 20" onClick={event => {
+                        setPage(pagesCount+1)
+                        addNewPage(pagesCount+1)
+                        setPagesCount(pagesCount+1)}}>
+                        <path
+                            d="M14.613,10c0,0.23-0.188,0.419-0.419,0.419H10.42v3.774c0,0.23-0.189,0.42-0.42,0.42s-0.419-0.189-0.419-0.42v-3.774H5.806c-0.23,0-0.419-0.189-0.419-0.419s0.189-0.419,0.419-0.419h3.775V5.806c0-0.23,0.189-0.419,0.419-0.419s0.42,0.189,0.42,0.419v3.775h3.774C14.425,9.581,14.613,9.77,14.613,10 M17.969,10c0,4.401-3.567,7.969-7.969,7.969c-4.402,0-7.969-3.567-7.969-7.969c0-4.402,3.567-7.969,7.969-7.969C14.401,2.031,17.969,5.598,17.969,10 M17.13,10c0-3.932-3.198-7.13-7.13-7.13S2.87,6.068,2.87,10c0,3.933,3.198,7.13,7.13,7.13S17.13,13.933,17.13,10"></path>
+                    </svg>
+                    <p className="hide small-text"><span>&#8505;</span>Add new page</p>
+                </aside>
                 <aside>
                     <div className="colorPicker" onClickCapture={e => {
                         highlightPen()
