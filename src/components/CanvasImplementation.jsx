@@ -126,12 +126,14 @@ export function CanvasImplementation(props){
     return (
         <div>
             <div className="page">
+                <div className="notebook-name">{props.name}</div>
                 <section>
 
                     <nav className="menu">
 
                         Main menu
                     </nav>
+
                     < Canvas width={794} height={1123} color={color} inputWidth={strokeWidth} name={props.name}/>
                     <aside className="connection-status hide">
                         <p >You are offline automatic saving is turned off.</p>
@@ -326,7 +328,7 @@ export function CanvasImplementation(props){
                         </svg>
 
                         <svg className="svg-icon-undo" viewBox="0 0 20 20" onClick={e => {
-                            deleteDB()
+                            // deleteDB()
                             deleteCanvas()
                         }}>
                             <path

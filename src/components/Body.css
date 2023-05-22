@@ -303,7 +303,7 @@ hr.below-thickness {
 }
 
 .loading-circle::after {
-    content: "Creating new notebook";
+    content: "Creating new notebook if it takes too long, refresh the page";
     display: inline-block;
     font-size: 16px;
     color: #ffffff;
@@ -333,4 +333,97 @@ hr.below-thickness {
 .page.loading {
     filter: blur(5px);
     pointer-events: none;
+}
+.notebook-name{
+    margin-top: 0;
+    width: 100%;
+    padding-inline-start: 20px;
+    padding-inline-end: 20px;
+    height: fit-content;
+    text-align: center;
+    border-radius: 0 0 30px 30px;
+    overflow: hidden;
+    margin-bottom: 0.5em;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #fdfdfd;
+}
+
+.notebook-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 20px;
+    padding: 20px;
+}
+
+.notebook-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    background-color: lightblue;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.notebook-item span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.notebook-add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    background-color: lightgray;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.notebook-add span {
+    font-size: 48px;
+    color: #666;
+}
+
+.modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.modal-content input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.modal-content button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: lightblue;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
 }

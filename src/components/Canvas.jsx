@@ -32,7 +32,7 @@ function logOnline() {
             console.log(pageForSave)
             storeToNotebook(nameForSave, pageForSave, document.querySelector('canvas').toDataURL())
         }
-    }, 25000);
+    }, 2000);
 }
 
 function logDisconnected() {
@@ -224,7 +224,7 @@ export function addImage() {
     }
 
     isImageInputMode = true
-    deactivateTextInput()
+    isTextInputMode = false
     const restorePicture = new Image();
     restorePicture.src = history[steps];
 
@@ -312,7 +312,7 @@ export function addImage() {
                             canvas.onmousedown = null
                             canvas.onmousemove = null
                         }
-                        isImageInputMode = false
+                        deactivateImageInput()
 
                         document.onmousedown = null
                         document.querySelector('.svg-icon-eraser').classList.remove("highlighted")

@@ -20,6 +20,7 @@ export function Body() {
         loadingCircle.style.content = "'Modifying content via JS'";
     }
 
+
     function updateNotebookNames(name) {
         if (!notebookNames.includes(name)) {
             setIsLoading(true);

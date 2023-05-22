@@ -1,6 +1,7 @@
 import {addStep} from "./Canvas.jsx";
 
 export function createNotebook(name, version) {
+
     return new Promise((resolve, reject) => {
         let r = indexedDB.open("notebooks", version);
         r.onupgradeneeded = function (e) {
