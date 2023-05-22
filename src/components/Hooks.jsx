@@ -2,7 +2,7 @@ import {useRef, useState} from "react";
 import {addStep} from "./Canvas.jsx";
 import {createNotebook, getFromNotebook, storeToNotebook} from "./indexedDB.jsx";
 
-export function useOnDraw(onDraw, rememberPath){
+export function useOnDraw(onDraw, name){
 
     const canvasRef = useRef(null)
 
@@ -34,7 +34,7 @@ export function useOnDraw(onDraw, rememberPath){
             let ctx = canvasRef.current.getContext("2d");
 
 
-            getFromNotebook("test", 1)
+            getFromNotebook(name, 1)
                 .then((imageData) => {
                     let restorePicture = new Image();
                     restorePicture.src = imageData;
@@ -87,7 +87,6 @@ export function useOnDraw(onDraw, rememberPath){
         const listener = () => {
             isDrawingRef.current = false;
             previousPointRef.current = null
-            if(rememberPath) rememberPath()
         }
         mouseUpListenerRef.current = listener
         window.addEventListener('mouseup', listener)

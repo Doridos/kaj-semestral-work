@@ -1,16 +1,22 @@
 import {addStep} from "./Canvas.jsx";
 
-export function createNotebook(name){
-    let r = indexedDB.open("notebooks", 1)
-    r.onupgradeneeded = function(e) {
-        let db = e.target.result
-        db.createObjectStore(name, {autoIncrement:true})
-        console.log("created")
-    }
+export function createNotebook(name, version) {
+    return new Promise((resolve, reject) => {
+        let r = indexedDB.open("notebooks", version);
+        r.onupgradeneeded = function (e) {
+            let db = e.target.result;
+            db.createObjectStore(name, { autoIncrement: true });
+            console.log("created");
+            resolve(); // Resolve the promise when object store is created
+        };
+        r.onerror = function (e) {
+            reject("Error opening/creating the database");
+        };
+    });
 }
 
 export function storeToNotebook(name, page, data) {
-    let r = indexedDB.open("notebooks", 1);
+    let r = indexedDB.open("notebooks");
     r.onsuccess = function (e) {
         let db = e.target.result;
         let objectStore = db.transaction([name], "readwrite").objectStore(name);
@@ -27,6 +33,7 @@ export function storeToNotebook(name, page, data) {
                 const updateRequest = objectStore.put(pageData, page);
 
                 updateRequest.onsuccess = () => {
+                    console.log(name)
                     console.log("Record updated successfully");
                 }
 
@@ -56,7 +63,7 @@ export function storeToNotebook(name, page, data) {
 }
 export function getFromNotebook(name, page) {
     return new Promise((resolve, reject) => {
-        let r = indexedDB.open("notebooks", 1);
+        let r = indexedDB.open("notebooks");
         r.onsuccess = function (e) {
             let db = e.target.result;
             let t = db.transaction([name], "readonly");
@@ -81,18 +88,19 @@ export function getFromNotebook(name, page) {
 }
 export function deleteDB() {
     let request =
-        window.indexedDB.open("notebooks", 1);
+        window.indexedDB.open("notebooks");
     let DBDeleteReq =
         window.indexedDB.deleteDatabase("notebooks");
     DBDeleteReq.onsuccess = function (event) {
         console.log("Database deleted successfully")
     }
+    localStorage.removeItem("numberOfNotebooks")
     createNotebook("test");
 }
 export async function getPagesCount(name) {
     return new Promise((resolve, reject) => {
         try {
-            let r = indexedDB.open("notebooks", 1);
+            let r = indexedDB.open("notebooks");
             r.onsuccess = function (e) {
                 let db = e.target.result;
                 let objectStore = db.transaction([name], "readonly").objectStore(name);

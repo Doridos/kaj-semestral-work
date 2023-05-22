@@ -10,22 +10,27 @@ let isImageInputMode = false;
 let canvas
 let ctx
     window.addEventListener("load", e => {
-    canvas = document.querySelector('canvas')
-    ctx = canvas.getContext("2d");
+        if(document.querySelector('canvas')){
+            canvas = document.querySelector('canvas')
+            ctx = canvas.getContext("2d");
+        }
 })
 
 let intervalId; // Variable to store the interval reference
 let pageForSave = 1
+let nameForSave = ""
 let allowedToSave = true
 function logOnline() {
     intervalId = setInterval(function() {
-        document.querySelector('aside.connection-status').classList.add("hide")
+        if(document.querySelector('aside.connection-status')){
+            document.querySelector('aside.connection-status').classList.add("hide")
+        }
         console.log("Online");
         console.log(pageForSave)
-        if(allowedToSave){
-            storeToNotebook('test', pageForSave, document.querySelector('canvas').toDataURL())
+        if(document.querySelector('canvas') && allowedToSave){
+            storeToNotebook(nameForSave, pageForSave, document.querySelector('canvas').toDataURL())
         }
-    }, 3000);
+    }, 15000);
 }
 
 function logDisconnected() {
@@ -59,10 +64,11 @@ const Canvas = ({
     width,
     height,
     color,
-    inputWidth
+    inputWidth,
+    name
 }) => {if(width !== undefined && height !== undefined){
 
-    const setCanvasRef = useOnDraw(onDraw)
+    const setCanvasRef = useOnDraw(onDraw, name)
     function onDraw(ctx, point, previousPoint){
         if (!isDragging && !isImageInputMode){
             drawLine(previousPoint, point, ctx, color, inputWidth)
@@ -146,6 +152,7 @@ function renderText(e){
         input.focus();
     }
 }
+
 export function undoStep() {
     if (steps > 0) {
         steps--;
@@ -171,7 +178,7 @@ export function addStep() {
     if (steps < history.length) {
         history.splice(steps);
     }
-    if (document.querySelector("canvas")) {
+    if (canvas) {
         history.push(canvas.toDataURL());
     }
 
@@ -342,10 +349,13 @@ export function addNewPage(page){
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     console.log(page)
-    storeToNotebook("test", page, document.querySelector('canvas').toDataURL())
+    storeToNotebook(nameForSave, page, document.querySelector('canvas').toDataURL())
 }
 
 export function restorePage(page){
+    canvas = document.querySelector('canvas')
+    ctx = canvas.getContext("2d");
+    console.log(page)
     emptyHistory()
     getFromNotebook("test", page)
         .then((imageData) => {
@@ -360,6 +370,9 @@ export function restorePage(page){
 }
 export function setPageCanvas(page){
     pageForSave = page
+}
+export function setName(name){
+    nameForSave = name
 }
 
 export default Canvas;
