@@ -145,15 +145,20 @@ export function CanvasImplementation(props){
                         </svg>Close</p></aside>
                     <aside className="pages">
                         <p className="count"><span className="arrow" onClick={event => {
-                            decrementPage()
                             console.log(page)
+                            storeToNotebook(props.name, page, document.querySelector('canvas').toDataURL())
+                            decrementPage()
+
                             if(page-1 >= 1) {
                                 restorePage(page-1)
                             }
 
 
-                        }}>&#8249;</span>{page}/{pagesCount !== null ? pagesCount : ""}<span className="arrow" onClick={event => {
+                        }}>&#8249;</span>{page}/{pagesCount !== null ? pagesCount : "..."}<span className="arrow" onClick={event => {
+                            console.log(page)
+                            storeToNotebook(props.name, page, document.querySelector('canvas').toDataURL())
                             incrementPage()
+
                             if(page +1 <= pagesCount) {
                                 restorePage(page+1)
                             }
@@ -163,6 +168,7 @@ export function CanvasImplementation(props){
                         <svg className="svg-icon-undo add-new-page" viewBox="0 0 20 20" onClick={event => {
                             setPage(pagesCount+1)
                             setPageCanvas(pagesCount+1)
+                            console.log(page)
                             storeToNotebook(props.name, page, document.querySelector('canvas').toDataURL())
                             addNewPage(pagesCount+1)
                             setPagesCount(pagesCount+1)}}>
@@ -320,7 +326,7 @@ export function CanvasImplementation(props){
                         </svg>
 
                         <svg className="svg-icon-undo" viewBox="0 0 20 20" onClick={e => {
-                            deleteDB("test")
+                            deleteDB()
                             deleteCanvas()
                         }}>
                             <path

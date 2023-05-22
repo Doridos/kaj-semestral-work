@@ -19,18 +19,20 @@ let ctx
 let intervalId; // Variable to store the interval reference
 let pageForSave = 1
 let nameForSave = ""
-let allowedToSave = true
+let allowedToSave = false
 function logOnline() {
     intervalId = setInterval(function() {
         if(document.querySelector('aside.connection-status')){
             document.querySelector('aside.connection-status').classList.add("hide")
         }
-        console.log("Online");
-        console.log(pageForSave)
+
         if(document.querySelector('canvas') && allowedToSave){
+            console.log(allowedToSave)
+            console.log("Online");
+            console.log(pageForSave)
             storeToNotebook(nameForSave, pageForSave, document.querySelector('canvas').toDataURL())
         }
-    }, 15000);
+    }, 25000);
 }
 
 function logDisconnected() {
@@ -341,9 +343,10 @@ export function addImage() {
     fileInput.click();
 }
 export function addNewPage(page){
-
+    console.log(page-1)
     const canvas = document.querySelector('canvas')
     const ctx = canvas.getContext('2d')
+
     emptyHistory()
     addStep()
     ctx.fillStyle = "white";
@@ -357,7 +360,7 @@ export function restorePage(page){
     ctx = canvas.getContext("2d");
     console.log(page)
     emptyHistory()
-    getFromNotebook("test", page)
+    getFromNotebook(nameForSave, page)
         .then((imageData) => {
             let restorePicture = new Image();
             restorePicture.src = imageData;

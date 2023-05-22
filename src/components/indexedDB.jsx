@@ -5,7 +5,10 @@ export function createNotebook(name, version) {
         let r = indexedDB.open("notebooks", version);
         r.onupgradeneeded = function (e) {
             let db = e.target.result;
-            db.createObjectStore(name, { autoIncrement: true });
+            if (!db.objectStoreNames.contains(name)){
+                db.createObjectStore(name, { autoIncrement: true });
+            }
+
             console.log("created");
             resolve(); // Resolve the promise when object store is created
         };
@@ -19,46 +22,49 @@ export function storeToNotebook(name, page, data) {
     let r = indexedDB.open("notebooks");
     r.onsuccess = function (e) {
         let db = e.target.result;
-        let objectStore = db.transaction([name], "readwrite").objectStore(name);
+        if (db.objectStoreNames.contains(name)){
+            let objectStore = db.transaction([name], "readwrite").objectStore(name);
 
-        const request = objectStore.get(page);
+            const request = objectStore.get(page);
 
-        request.onsuccess = () => {
-            let pageData = request.result;
+            request.onsuccess = () => {
+                let pageData = request.result;
 
-            if (pageData) {
-                // Key exists, update the value
-                pageData.data = data;
+                if (pageData) {
+                    // Key exists, update the value
+                    pageData.data = data;
 
-                const updateRequest = objectStore.put(pageData, page);
+                    const updateRequest = objectStore.put(pageData, page);
 
-                updateRequest.onsuccess = () => {
-                    console.log(name)
-                    console.log("Record updated successfully");
+                    updateRequest.onsuccess = () => {
+                        console.log(name)
+                        console.log("Record updated successfully");
+                    }
+
+                    updateRequest.onerror = () => {
+                        console.log("Error updating the record");
+                    };
+                } else {
+                    // Key doesn't exist, create a new record
+                    const newPageData = {data: data };
+
+                    const addRequest = objectStore.add(newPageData);
+
+                    addRequest.onsuccess = () => {
+                        console.log("New record added successfully");
+                    }
+
+                    addRequest.onerror = () => {
+                        console.log("Error adding the new record");
+                    }
                 }
+            }
 
-                updateRequest.onerror = () => {
-                    console.log("Error updating the record");
-                };
-            } else {
-                // Key doesn't exist, create a new record
-                const newPageData = {data: data };
-
-                const addRequest = objectStore.add(newPageData);
-
-                addRequest.onsuccess = () => {
-                    console.log("New record added successfully");
-                }
-
-                addRequest.onerror = () => {
-                    console.log("Error adding the new record");
-                }
+            request.onerror = () => {
+                console.log("Error retrieving the record");
             }
         }
 
-        request.onerror = () => {
-            console.log("Error retrieving the record");
-        }
     }
 }
 export function getFromNotebook(name, page) {
@@ -66,20 +72,23 @@ export function getFromNotebook(name, page) {
         let r = indexedDB.open("notebooks");
         r.onsuccess = function (e) {
             let db = e.target.result;
-            let t = db.transaction([name], "readonly");
-            let objectStore = t.objectStore(name);
-            let r = objectStore.get(page);
-            r.onsuccess = function (e) {
-                const imageData = e.target.result ? e.target.result.data : null;
-                if (imageData) {
-                    resolve(imageData); // Resolve the promise with the image data
-                } else {
-                    reject("Data not found"); // Reject the promise if data is not found
-                }
-            };
-            r.onerror = function (e) {
-                reject("Error retrieving the image data"); // Reject the promise on error
-            };
+            let t
+            if (db.objectStoreNames.contains(name)){
+               t = db.transaction([name], "readonly");
+                let objectStore = t.objectStore(name);
+                let r = objectStore.get(page);
+                r.onsuccess = function (e) {
+                    const imageData = e.target.result ? e.target.result.data : null;
+                    if (imageData) {
+                        resolve(imageData); // Resolve the promise with the image data
+                    } else {
+                        reject("Data not found"); // Reject the promise if data is not found
+                    }
+                };
+                r.onerror = function (e) {
+                    reject("Error retrieving the image data"); // Reject the promise on error
+                };
+            }
         };
         r.onerror = function (e) {
             reject("Error opening the database"); // Reject the promise if there's an error opening the database
@@ -94,8 +103,7 @@ export function deleteDB() {
     DBDeleteReq.onsuccess = function (event) {
         console.log("Database deleted successfully")
     }
-    localStorage.removeItem("numberOfNotebooks")
-    createNotebook("test");
+    localStorage.removeItem("notebookNames")
 }
 export async function getPagesCount(name) {
     return new Promise((resolve, reject) => {
@@ -103,12 +111,15 @@ export async function getPagesCount(name) {
             let r = indexedDB.open("notebooks");
             r.onsuccess = function (e) {
                 let db = e.target.result;
-                let objectStore = db.transaction([name], "readonly").objectStore(name);
+                if (db.objectStoreNames.contains(name)) {
+                    let objectStore = db.transaction([name], "readonly").objectStore(name);
 
-                const countRequest = objectStore.count();
-                countRequest.onsuccess = () => {
-                    resolve(countRequest.result);
-                };
+                    const countRequest = objectStore.count();
+                    countRequest.onsuccess = () => {
+                        resolve(countRequest.result);
+                    };
+                }
+
             };
         } catch (error) {
             reject(error);
