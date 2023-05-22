@@ -3,7 +3,7 @@ import {addStep} from "./Canvas.jsx";
 export function createNotebook(name, version) {
 
     return new Promise((resolve, reject) => {
-        let r = indexedDB.open("notebooks", version);
+        let r = indexedDB.open(localStorage.getItem("user"), version);
         r.onupgradeneeded = function (e) {
             let db = e.target.result;
             if (!db.objectStoreNames.contains(name)){
@@ -20,7 +20,7 @@ export function createNotebook(name, version) {
 }
 
 export function storeToNotebook(name, page, data) {
-    let r = indexedDB.open("notebooks");
+    let r = indexedDB.open(localStorage.getItem("user"));
     r.onsuccess = function (e) {
         let db = e.target.result;
         if (db.objectStoreNames.contains(name)){
@@ -70,7 +70,7 @@ export function storeToNotebook(name, page, data) {
 }
 export function getFromNotebook(name, page) {
     return new Promise((resolve, reject) => {
-        let r = indexedDB.open("notebooks");
+        let r = indexedDB.open(localStorage.getItem("user"));
         r.onsuccess = function (e) {
             let db = e.target.result;
             let t
@@ -98,9 +98,9 @@ export function getFromNotebook(name, page) {
 }
 export function deleteDB() {
     let request =
-        window.indexedDB.open("notebooks");
+        window.indexedDB.open(localStorage.getItem("user"));
     let DBDeleteReq =
-        window.indexedDB.deleteDatabase("notebooks");
+        window.indexedDB.deleteDatabase(localStorage.getItem("user"));
     DBDeleteReq.onsuccess = function (event) {
         console.log("Database deleted successfully")
     }
@@ -109,7 +109,7 @@ export function deleteDB() {
 export async function getPagesCount(name) {
     return new Promise((resolve, reject) => {
         try {
-            let r = indexedDB.open("notebooks");
+            let r = indexedDB.open(localStorage.getItem("user"));
             r.onsuccess = function (e) {
                 let db = e.target.result;
                 if (db.objectStoreNames.contains(name)) {

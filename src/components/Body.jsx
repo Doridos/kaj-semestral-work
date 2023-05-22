@@ -4,27 +4,29 @@ import "primereact/resources/primereact.min.css";
 import "./Body.css";
 
 import { CanvasImplementation } from "./CanvasImplementation.jsx";
-import {createNotebook, deleteDB, storeToNotebook} from "./indexedDB.jsx";
-import {addNewPage, setName, setPageCanvas} from "./Canvas.jsx";
+import { createNotebook, deleteDB, storeToNotebook } from "./indexedDB.jsx";
+import { addNewPage, setName, setPageCanvas } from "./Canvas.jsx";
 
 export function Body(props) {
+
     let notebookNames = [];
     if (localStorage.getItem("notebookNames")) {
         notebookNames = JSON.parse(localStorage.getItem("notebookNames"));
     } else {
         localStorage.setItem("notebookNames", JSON.stringify(notebookNames));
     }
-
     function updateNotebookNames(name) {
-        if (!notebookNames.includes(name)) {
+        if (!notebookNames.some((notebook) => notebook.notebookName === name)) {
             setIsLoading(true);
-            notebookNames.push(name);
+            notebookNames.push({
+                username: localStorage.getItem("user"),
+                notebookName: name,
+            });
             localStorage.setItem("notebookNames", JSON.stringify(notebookNames));
+
             console.log("sss");
         }
     }
-
-
 
     const [notebookName, setNotebookName] = useState(
         localStorage.getItem("notebook")
@@ -40,12 +42,15 @@ export function Body(props) {
         }
     }, [isModalOpen]);
 
-
     useEffect(() => {
         if (notebookName) {
             console.log(notebookNames.length);
             updateNotebookNames(notebookName);
-            createNotebook(notebookName, notebookNames.length + 1, props.username)
+            let version = notebookNames.length
+            if(version > notebookNames.filter((notebook) => notebook.username === localStorage.getItem("user"))){
+                version = notebookNames.filter((notebook) => notebook.username === localStorage.getItem("user"))
+            }
+            createNotebook(notebookName, version + 1)
                 .then(() => {
                     console.log(notebookNames.length);
                     console.log(notebookName);
@@ -89,13 +94,23 @@ export function Body(props) {
 
             <div className={`page ${isLoading ? "loading" : ""}`}>
                 {notebookName ? (
-                    <CanvasImplementation name={notebookName} function={setNotebookName} />
+                    <CanvasImplementation
+                        name={notebookName}
+                        function={setNotebookName}
+                    />
                 ) : (
                     <div>
                         <div className="notebook-grid">
-                            {notebookNames.map((name, index) => (
-                                <div className="notebook-item" key={index} onClick={e => setNotebookName(name)}>
-                                    {name}
+                            {notebookNames.filter((notebook) => notebook.username === localStorage.getItem("user")).map((notebook, index) => (
+                                <div
+                                    className="notebook-item"
+                                    key={index}
+                                    onClick={(e) => {
+                                        localStorage.setItem("notebook", notebook.notebookName);
+                                        setNotebookName(notebook.notebookName);
+                                    }}
+                                >
+                                    {notebook.notebookName}
                                 </div>
                             ))}
                             <div className="notebook-item create-notebook" onClick={openModal}>
@@ -126,7 +141,10 @@ export function Body(props) {
                                         placeholder="Enter notebook name"
                                         autoComplete="new-password"
                                         value={newNotebookName}
-                                        onChange={(event) => setNewNotebookName(event.target.value)}
+                                        onChange={(event) => {
+                                            setNewNotebookName(event.target.value);
+                                            localStorage.setItem("notebook", event.target.value);
+                                        }}
                                     ></input>
                                     <button type="submit">Create</button>
                                 </form>
@@ -136,9 +154,8 @@ export function Body(props) {
                 )}
 
                 <footer>
-                    <div className="content-container">
-                        @My notebook 2023
-                    </div></footer>
+                    <div className="content-container">@My notebook 2023</div>
+                </footer>
             </div>
         </div>
     );

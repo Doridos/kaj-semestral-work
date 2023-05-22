@@ -328,7 +328,7 @@ export function CanvasImplementation(props){
                         </svg>
 
                         <svg className="svg-icon-undo" viewBox="0 0 20 20" onClick={e => {
-                            // deleteDB()
+                            deleteDB()
                             deleteCanvas()
                         }}>
                             <path

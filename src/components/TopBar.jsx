@@ -25,7 +25,7 @@ export function TopBar(props){
                 <p>My notebook</p>
             </div>
             <div className="right-side"><p>{username}<span id="logout-icon">
-                <img className="icon" onClick= {event => {localStorage.removeItem("user"); props.function("")}}
+                <img className="icon" onClick= {event => {localStorage.removeItem("user"); props.function(""); localStorage.removeItem("notebook")}}
                                                                                   src={logoutImage}
                                                                                   alt="Ikonka pro odhlášení"/></span></p></div>
             <button onClick = {event => {
