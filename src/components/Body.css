@@ -147,10 +147,15 @@ body.menu-visible .menu  {
 }
 
 .page footer {
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     color: gray;
+}
+
+.page footer .content-container {
+    align-self: flex-end;
 }
 
 aside input[type=text]{
@@ -255,6 +260,7 @@ hr.below-thickness {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px !important;
 }
 .svg-icon-undo,
+.svg-icon-new-notebook,
 .svg-icon-redo{
     min-width: 2em;
     height: 2em;
@@ -355,75 +361,108 @@ hr.below-thickness {
 }
 
 .notebook-grid {
+    margin-top: 1em;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-gap: 20px;
-    padding: 20px;
 }
 
 .notebook-item {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 150px;
-    background-color: lightblue;
-    border-radius: 10px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    opacity: 1;
+    border-radius: 5px;
+}
+
+.notebook-item:hover{
     cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+
 }
 
-.notebook-item span {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.notebook-add {
+.add-notebook {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 150px;
-    background-color: lightgray;
-    border-radius: 10px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.add-notebook button {
+    font-size: 24px;
+    background-color: transparent;
+    border: none;
     cursor: pointer;
+    transition: color 0.3s;
 }
 
-.notebook-add span {
-    font-size: 48px;
-    color: #666;
+.add-notebook button:hover {
+    color: #999;
 }
 
+/* Modal Styles */
 .modal {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: none;
     position: fixed;
-    top: 0;
+    z-index: 9999;
     left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
+    overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
+}
+
+.modal.open {
+    display: block;
 }
 
 .modal-content {
     background-color: #fff;
+    margin: 10% auto;
     padding: 20px;
-    border-radius: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 400px;
+    max-width: 90%;
 }
 
-.modal-content input[type="text"] {
+.modal-content label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.modal-content input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 3px;
+    margin-bottom: 20px;
 }
 
 .modal-content button {
-    margin-top: 10px;
     padding: 10px 20px;
-    background-color: lightblue;
-    border: none;
-    border-radius: 5px;
+    background-color: #4691f6;
     color: #fff;
-    font-weight: bold;
+    border: none;
+    border-radius: 3px;
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.modal-content button:hover {
+    background-color: #4691f6;
+    opacity: 1;
+}
+
+.create-notebook:hover{
+    cursor: pointer;
+}
+.close:hover{
     cursor: pointer;
 }

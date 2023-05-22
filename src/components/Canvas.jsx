@@ -167,7 +167,6 @@ export function undoStep() {
     }
 }
 export function redoStep() {
-    // deleteDB()
     if (steps < history.length-1) {
         steps++;
         let restorePicture = new Image();

@@ -9,7 +9,7 @@ export function App(props) {
     return (
         <React.Fragment>
             <TopBar username={username} function={setUsername}/>
-            <Body />
+            <Body username={username} />
         </React.Fragment>
     );
 }
