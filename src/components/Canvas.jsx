@@ -7,14 +7,7 @@ let steps = -1;
 let isTextInputMode = false;
 let isDragging = false;
 let isImageInputMode = false;
-let canvas
-let ctx
-    window.addEventListener("load", e => {
-        if(document.querySelector('canvas')){
-            canvas = document.querySelector('canvas')
-            ctx = canvas.getContext("2d");
-        }
-})
+
 
 let intervalId; // Variable to store the interval reference
 let pageForSave = 1
@@ -157,6 +150,7 @@ function renderText(e){
 
 export function undoStep() {
     if (steps > 0) {
+        let ctx = document.querySelector('canvas').getContext('2d')
         steps--;
         let restorePicture = new Image();
         restorePicture.src = history[steps];
@@ -167,6 +161,7 @@ export function undoStep() {
     }
 }
 export function redoStep() {
+    let ctx = document.querySelector('canvas').getContext('2d')
     if (steps < history.length-1) {
         steps++;
         let restorePicture = new Image();
@@ -176,11 +171,12 @@ export function redoStep() {
 }
 export function addStep() {
     steps++;
+    console.log(document.querySelector('canvas'))
     if (steps < history.length) {
         history.splice(steps);
     }
-    if (canvas) {
-        history.push(canvas.toDataURL());
+    if (document.querySelector('canvas')) {
+        history.push(document.querySelector('canvas').toDataURL());
     }
 
     console.log(history);
@@ -355,8 +351,8 @@ export function addNewPage(page){
 }
 
 export function restorePage(page){
-    canvas = document.querySelector('canvas')
-    ctx = canvas.getContext("2d");
+    let canvas = document.querySelector('canvas')
+    let ctx = document.querySelector('canvas').getContext("2d");
     console.log(page)
     emptyHistory()
     getFromNotebook(nameForSave, page)

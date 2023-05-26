@@ -100,6 +100,10 @@ export function Body(props) {
                     />
                 ) : (
                     <div>
+                        <nav className="menu">
+
+                            Main menu
+                        </nav>
                         <div className="notebook-grid">
                             {notebookNames.filter((notebook) => notebook.username === localStorage.getItem("user")).map((notebook, index) => (
                                 <div

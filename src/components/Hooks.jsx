@@ -39,8 +39,8 @@ export function useOnDraw(onDraw, name){
                     let restorePicture = new Image();
                     restorePicture.src = imageData;
                     restorePicture.onload = function () {
-                        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height); // Clear the canvas
-                        ctx.drawImage(restorePicture, 0, 0); // Draw the image
+                        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+                        ctx.drawImage(restorePicture, 0, 0);
                         addStep();
                     };
                 })
