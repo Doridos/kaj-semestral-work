@@ -1,92 +1,64 @@
-export function createNotebook(name, version) {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(localStorage.getItem("user"), version);
-        request.onupgradeneeded = function (e) {
-            const db = e.target.result;
-            if (!db.objectStoreNames.contains(name)) {
-                db.createObjectStore(name, { autoIncrement: true });
-            }
-        };
-        request.onerror = function (e) {
-            reject("Error opening/creating the database");
-        };
-        request.onsuccess = function () {
-            resolve(); // Resolve the promise when the object store is created
-        };
-    });
-}
-
 export function storeToNotebook(name, page, data) {
-    const request = indexedDB.open(localStorage.getItem("user"));
-    request.onsuccess = function (e) {
-        const db = e.target.result;
-        if (db.objectStoreNames.contains(name)) {
-            const objectStore = db.transaction([name], "readwrite").objectStore(name);
+    console.log("Storing page " + page )
+    let r = indexedDB.open(localStorage.getItem("user"))
+    r.onsuccess = function(e) {
+        let db = e.target.result
+        let t = db.transaction(["notebookNames"], "readwrite")
+        let r = t.objectStore("notebookNames").get(name)
+        r.onsuccess = function(e) {
+            const record = e.target.result  // {some: "data"}
+            if(record.pages[page-1]){
+                record.pages[page - 1] = data
+            }
+            else {
+                record.pages.push(data)
+            }
+            console.log(record.pages)
+            const updateRequest = t.objectStore("notebookNames").put(record);
 
-            const getRequest = objectStore.get(page);
-
-            getRequest.onsuccess = () => {
-                let pageData = getRequest.result;
-
-                if (pageData) {
-                    // Key exists, update the value
-                    pageData.data = data;
-
-                    const updateRequest = objectStore.put(pageData, page);
-
-                    updateRequest.onsuccess = () => {
-                        console.log("Record updated successfully");
-                    };
-
-                    updateRequest.onerror = () => {
-                        console.log("Error updating the record");
-                    };
-                } else {
-                    // Key doesn't exist, create a new record
-                    const newPageData = { data: data };
-
-                    const addRequest = objectStore.add(newPageData);
-
-                    addRequest.onsuccess = () => {
-                        console.log("New record added successfully");
-                    };
-
-                    addRequest.onerror = () => {
-                        console.log("Error adding the new record");
-                    };
-                }
+            updateRequest.onsuccess = function(event) {
+                console.log('Record updated successfully');
             };
 
-            getRequest.onerror = () => {
-                console.log("Error retrieving the record");
+            updateRequest.onerror = function(event) {
+                console.log('Error updating record: ' + event.target.error);
             };
         }
-    };
+    }
 }
 
 export function getFromNotebook(name, page) {
+    page -= 1
+    console.log(page)
+    let user = localStorage.getItem("user")
+    console.log("getfromNote")
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open(localStorage.getItem("user"));
-        request.onsuccess = function (e) {
-            const db = e.target.result;
-            if (db.objectStoreNames.contains(name)) {
-                const transaction = db.transaction([name], "readonly");
-                const objectStore = transaction.objectStore(name);
-                const getRequest = objectStore.get(page);
-                getRequest.onsuccess = function (e) {
-                    const imageData = e.target.result ? e.target.result.data : null;
-                    if (imageData) {
-                        resolve(imageData); // Resolve the promise with the image data
-                    } else {
-                        reject("Data not found"); // Reject the promise if data is not found
+        let r = indexedDB.open(user)
+        r.onsuccess = function(e) {
+            let db = e.target.result
+            if(db.objectStoreNames.contains("notebookNames")){
+                let t = db.transaction(["notebookNames"], "readonly")
+                let r = t.objectStore("notebookNames").get(name)
+                r.onsuccess = function(e) {
+                    console.log(e.target.result)
+                    if(e.target.result){
+                        const record = e.target.result.pages[page]
+
+                        const imageData = record  ? record : null;
+                        if (imageData) {
+                            resolve(imageData); // Resolve the promise with the image data
+                        } else {
+                            reject("Data not found"); // Reject the promise if data is not found
+                        }
                     }
-                };
-                getRequest.onerror = function (e) {
-                    reject("Error retrieving the image data"); // Reject the promise on error
-                };
+                }
             }
+            else {
+                console.log("getFromNotebook: ObjectStore doesnt exist")
+            }
+
         };
-        request.onerror = function (e) {
+        r.onerror = function (e) {
             reject("Error opening the database"); // Reject the promise if there's an error opening the database
         };
     });
@@ -102,19 +74,27 @@ export function deleteDB() {
 
 export async function getPagesCount(name) {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open(localStorage.getItem("user"));
-        request.onsuccess = function (e) {
-            const db = e.target.result;
-            if (db.objectStoreNames.contains(name)) {
-                const objectStore = db.transaction([name], "readonly").objectStore(name);
-                const countRequest = objectStore.count();
-                countRequest.onsuccess = () => {
-                    resolve(countRequest.result);
-                };
+        let r = indexedDB.open(localStorage.getItem("user"))
+        r.onsuccess = function(e) {
+            let db = e.target.result
+            try {
+                let t = db.transaction(["notebookNames"], "readonly")
+                let r = t.objectStore("notebookNames").get(name)
+                r.onsuccess = function(e) {
+                    if(e.target.result){
+                        resolve(e.target.result.pages.length)
+                    }
+                    else {
+                        resolve(1)
+                    }
+                }
+                r.onerror = function (e){
+                    console.log("Object store is being created")
+                }
+            } catch (e){
+                console.log("Object store is being created")
             }
-        };
-        request.onerror = function (e) {
-            reject("Error opening the database"); // Reject the promise if there's an error opening the database
+
         };
     });
 }

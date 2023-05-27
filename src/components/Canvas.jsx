@@ -1,6 +1,6 @@
 import './Canvas.css'
 import {useOnDraw} from './Hooks.jsx'
-import {createNotebook, deleteDB, getFromNotebook, storeToNotebook} from "./indexedDB.jsx";
+import {deleteDB, getFromNotebook, storeToNotebook} from "./indexedDB.jsx";
 
 let history = [];
 let steps = -1;
@@ -150,14 +150,18 @@ function renderText(e){
 
 export function undoStep() {
     if (steps > 0) {
-        let ctx = document.querySelector('canvas').getContext('2d')
+        const canvas = document.querySelector('canvas')
+        let ctx =  canvas.getContext('2d')
         steps--;
         let restorePicture = new Image();
         restorePicture.src = history[steps];
         console.log(history)
         console.log(restorePicture)
         console.log(steps)
-        restorePicture.onload = function () { ctx.drawImage(restorePicture, 0, 0); console.log("aaaa")}
+        restorePicture.onload = function () {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(restorePicture, 0, 0);
+        }
     }
 }
 export function redoStep() {
@@ -338,23 +342,20 @@ export function addImage() {
     fileInput.click();
 }
 export function addNewPage(page){
-    console.log(page-1)
     const canvas = document.querySelector('canvas')
     const ctx = canvas.getContext('2d')
-
     emptyHistory()
-    addStep()
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    console.log(page)
+    addStep()
     storeToNotebook(nameForSave, page, document.querySelector('canvas').toDataURL())
 }
 
 export function restorePage(page){
     let canvas = document.querySelector('canvas')
     let ctx = document.querySelector('canvas').getContext("2d");
-    console.log(page)
     emptyHistory()
+    console.log(history)
     getFromNotebook(nameForSave, page)
         .then((imageData) => {
             let restorePicture = new Image();
@@ -362,8 +363,9 @@ export function restorePage(page){
             restorePicture.onload = function () {
                 ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
                 ctx.drawImage(restorePicture, 0, 0); // Draw the image
-                addStep();
+                addStep()
             };
+
         })
 }
 export function setPageCanvas(page){

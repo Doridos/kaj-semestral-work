@@ -1,6 +1,6 @@
 import {useRef, useState} from "react";
 import {addStep} from "./Canvas.jsx";
-import {createNotebook, getFromNotebook, storeToNotebook} from "./indexedDB.jsx";
+import {getFromNotebook, storeToNotebook} from "./indexedDB.jsx";
 
 export function useOnDraw(onDraw, name){
 
@@ -32,8 +32,6 @@ export function useOnDraw(onDraw, name){
         canvasRef.current = reference;
         if (init) {
             let ctx = canvasRef.current.getContext("2d");
-
-
             getFromNotebook(name, 1)
                 .then((imageData) => {
                     let restorePicture = new Image();
@@ -41,16 +39,17 @@ export function useOnDraw(onDraw, name){
                     restorePicture.onload = function () {
                         ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
                         ctx.drawImage(restorePicture, 0, 0);
-                        addStep();
+                        addStep()
                     };
                 })
                 .catch((error) => {
                     console.log("bbb");
                     ctx.fillStyle = "white";
                     ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+                    addStep()
                 })
                 .finally(() => {
-                    addStep();
+                    // addStep()
                 });
 
             setInit(false);

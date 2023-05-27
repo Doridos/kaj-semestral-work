@@ -4,8 +4,7 @@ import "primereact/resources/primereact.min.css";
 import "./Body.css";
 
 import { CanvasImplementation } from "./CanvasImplementation.jsx";
-import { createNotebook, deleteDB, storeToNotebook } from "./indexedDB.jsx";
-import { addNewPage, setName, setPageCanvas } from "./Canvas.jsx";
+import {addNewPage, addStep, setName, setPageCanvas} from "./Canvas.jsx";
 
 export function Body(props) {
 
@@ -16,21 +15,39 @@ export function Body(props) {
         localStorage.setItem("notebookNames", JSON.stringify(notebookNames));
     }
     function updateNotebookNames(name) {
+        let username = localStorage.getItem("user")
+
         if (!notebookNames.some((notebook) => notebook.notebookName === name)) {
             setIsLoading(true);
             notebookNames.push({
-                username: localStorage.getItem("user"),
+                username: username,
                 notebookName: name,
             });
             localStorage.setItem("notebookNames", JSON.stringify(notebookNames));
 
-            console.log("sss");
+            let r = indexedDB.open(username, 2)
+            r.onupgradeneeded = function(e) {
+                let db = e.target.result
+                db.createObjectStore("notebookNames", {keyPath: 'name'})
+                console.log("created")
+            }
+            r.onsuccess = function (e){
+                let db = e.target.result
+                let t = db.transaction(["notebookNames"], "readwrite")
+                t.objectStore("notebookNames").add({
+                    name: name,
+                    pages: []
+                })
+                addStep()
+                setIsLoading(false);
+            }
         }
     }
 
     const [notebookName, setNotebookName] = useState(
         localStorage.getItem("notebook")
     );
+    const [pages, setPages] = useState(1)
     const [isLoading, setIsLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newNotebookName, setNewNotebookName] = useState("");
@@ -44,29 +61,19 @@ export function Body(props) {
 
     useEffect(() => {
         if (notebookName) {
-            console.log(notebookNames.length);
             updateNotebookNames(notebookName);
-            let version = notebookNames.length
-            if(version > notebookNames.filter((notebook) => notebook.username === localStorage.getItem("user"))){
-                version = notebookNames.filter((notebook) => notebook.username === localStorage.getItem("user"))
-            }
-            createNotebook(notebookName, version + 1)
-                .then(() => {
-                    console.log(notebookNames.length);
-                    console.log(notebookName);
-                    indexedDB.open(props.username).onsuccess = function (sender, args) {
-                        console.log(sender.target.result.objectStoreNames);
-                    };
-                    console.log("Notebook created successfully");
-                })
-                .catch((error) => {
-                    console.error("Error creating notebook:", error);
-                })
-                .finally(() => {
-                    setIsLoading(false);
-                });
-        }
+            let r = indexedDB.open(localStorage.getItem("user"))
+            r.onsuccess = function(e) {
+                let db = e.target.result
+                let t = db.transaction(["notebookNames"], "readwrite")
+                let r = t.objectStore("notebookNames").get(notebookName)
+                r.onsuccess = function (e) {
+                    console.log(e.target.result.pages.length+1)
 
+                    setPages(e.target.result.pages.length+1)
+                }
+            }
+        }
         setName(notebookName);
     }, [notebookName]);
 
@@ -97,6 +104,7 @@ export function Body(props) {
                     <CanvasImplementation
                         name={notebookName}
                         function={setNotebookName}
+                        pages={pages}
                     />
                 ) : (
                     <div>

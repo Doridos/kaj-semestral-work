@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {createNotebook, deleteDB, getPagesCount, storeToNotebook} from "./indexedDB.jsx";
+import {deleteDB, getPagesCount, storeToNotebook} from "./indexedDB.jsx";
 import Canvas, {
     activateImageInput,
     activateTextInput, addImage,
@@ -43,6 +43,7 @@ export function CanvasImplementation(props){
                 if(result === 0){
                     result = 1
                 }
+
                 setPagesCount(result);
             })
             .catch((error) => {
@@ -55,6 +56,8 @@ export function CanvasImplementation(props){
     const [dontShow2, setDontShow2] = useState(true);
     const [dontShow3, setDontShow3] = useState(true);
     const [dontShow4, setDontShow4] = useState(true);
+
+
 
 
     function highlightEraser(){
