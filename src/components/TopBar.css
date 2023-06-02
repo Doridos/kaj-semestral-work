@@ -29,6 +29,7 @@
 }
 
 .top-bar{
+    height: 70px;
     z-index: 50;
     position: sticky;
     padding: 0.5em;

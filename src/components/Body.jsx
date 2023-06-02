@@ -5,8 +5,10 @@ import "./Body.css";
 
 import { CanvasImplementation } from "./CanvasImplementation.jsx";
 import {addNewPage, addStep, setName, setPageCanvas} from "./Canvas.jsx";
+import {deleteDB} from "./indexedDB.jsx";
+import {Menu} from "./Menu.jsx";
 
-export function Body(props) {
+export function Body() {
 
     let notebookNames = [];
     if (localStorage.getItem("notebookNames")) {
@@ -52,6 +54,13 @@ export function Body(props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newNotebookName, setNewNotebookName] = useState("");
     const inputRef = useRef(null); // Add a useRef for the input element
+    const handleChange = (event) => {
+        const value = event.target.value;
+        setNewNotebookName(value);
+        localStorage.setItem('notebook', value);
+    };
+
+    const isExceeded = newNotebookName.length > 49;
 
     useEffect(() => {
         if (isModalOpen) {
@@ -108,10 +117,7 @@ export function Body(props) {
                     />
                 ) : (
                     <div>
-                        <nav className="menu">
-
-                            Main menu
-                        </nav>
+                        <Menu />
                         <div className="notebook-grid">
                             {notebookNames.filter((notebook) => notebook.username === localStorage.getItem("user")).map((notebook, index) => (
                                 <div
@@ -123,6 +129,39 @@ export function Body(props) {
                                     }}
                                 >
                                     {notebook.notebookName}
+                                    <span className="trash" onClick={ e=> {
+                                        e.stopPropagation()
+                                        let text = `Do you want to delete notebook ${notebook.notebookName}?\nIf yes press OK, otherwise press Cancel.`;
+                                        if (confirm(text) === true) {
+                                            let r = indexedDB.open(localStorage.getItem('user'));
+                                            r.onsuccess = function (e) {
+                                                let db = e.target.result;
+                                                let t = db.transaction(['notebookNames'], 'readwrite');
+                                                let objectStore = t.objectStore('notebookNames');
+                                                let request = objectStore.delete(notebook.notebookName);
+
+                                                request.onsuccess = function (e) {
+                                                    const index = notebookNames.findIndex(n => n.notebookName === notebook.notebookName);
+                                                    if (index !== -1) {
+                                                        // Remove the record from the notebookNames array
+                                                        notebookNames.splice(index, 1);
+                                                        // Update the local storage with the modified notebookNames array
+                                                        localStorage.setItem('notebookNames', JSON.stringify(notebookNames));
+                                                        setNotebookName("")
+                                                    }
+                                                };
+                                            };
+
+                                            r.onerror = function (e) {
+                                                reject('Failed to open database');
+                                            };
+                                        }
+                                    }}>
+                                        <svg className="trash-icon" viewBox="0 0 20 20">
+							    <path
+                                d="M17.114,3.923h-4.589V2.427c0-0.252-0.207-0.459-0.46-0.459H7.935c-0.252,0-0.459,0.207-0.459,0.459v1.496h-4.59c-0.252,0-0.459,0.205-0.459,0.459c0,0.252,0.207,0.459,0.459,0.459h1.51v12.732c0,0.252,0.207,0.459,0.459,0.459h10.29c0.254,0,0.459-0.207,0.459-0.459V4.841h1.511c0.252,0,0.459-0.207,0.459-0.459C17.573,4.127,17.366,3.923,17.114,3.923M8.394,2.886h3.214v0.918H8.394V2.886z M14.686,17.114H5.314V4.841h9.372V17.114z M12.525,7.306v7.344c0,0.252-0.207,0.459-0.46,0.459s-0.458-0.207-0.458-0.459V7.306c0-0.254,0.205-0.459,0.458-0.459S12.525,7.051,12.525,7.306M8.394,7.306v7.344c0,0.252-0.207,0.459-0.459,0.459s-0.459-0.207-0.459-0.459V7.306c0-0.254,0.207-0.459,0.459-0.459S8.394,7.051,8.394,7.306"></path>
+						        </svg>
+                                    </span>
                                 </div>
                             ))}
                             <div className="notebook-item create-notebook" onClick={openModal}>
@@ -153,11 +192,12 @@ export function Body(props) {
                                         placeholder="Enter notebook name"
                                         autoComplete="new-password"
                                         value={newNotebookName}
-                                        onChange={(event) => {
-                                            setNewNotebookName(event.target.value);
-                                            localStorage.setItem("notebook", event.target.value);
-                                        }}
-                                    ></input>
+                                        maxLength={50}
+                                        onChange={handleChange}
+                                    />
+                                    {isExceeded && (
+                                        <p className="small-text-alert">Character limit exceeded (50 characters maximum).</p>
+                                    )}
                                     <button type="submit">Create</button>
                                 </form>
                             </div>

@@ -8,10 +8,11 @@ import Canvas, {
     deactivateImageInput,
     deactivateTextInput,
     emptyHistory, redoStep,
-    restorePage,
+    restorePage, setName,
     setPageCanvas, undoStep
 } from "./Canvas.jsx";
 import {ColorPicker} from "primereact/colorpicker";
+import {Menu} from "./Menu.jsx";
 
 function Slider({ value, min, max, step, onChange }) {
     return (
@@ -131,17 +132,14 @@ export function CanvasImplementation(props){
             <div className="page">
                 <div className="notebook-name">{props.name}</div>
                 <section>
-
-                    <nav className="menu">
-
-                        Main menu
-                    </nav>
+                    <Menu />
 
                     < Canvas width={794} height={1123} color={color} inputWidth={strokeWidth} name={props.name}/>
                     <aside className="connection-status hide">
                         <p >You are offline automatic saving is turned off.</p>
                     </aside>
                     <aside className="close-notebook" onClick= {event => {
+                        storeToNotebook(props.name, page, document.querySelector('canvas').toDataURL())
                         props.function("")
                         localStorage.removeItem("notebook")
                     }}>
@@ -150,7 +148,6 @@ export function CanvasImplementation(props){
                         </svg>Close</p></aside>
                     <aside className="pages">
                         <p className="count"><span className="arrow" onClick={event => {
-                            console.log(page)
                             storeToNotebook(props.name, page, document.querySelector('canvas').toDataURL())
                             decrementPage()
 
@@ -331,7 +328,6 @@ export function CanvasImplementation(props){
                         </svg>
 
                         <svg className="svg-icon-undo" viewBox="0 0 20 20" onClick={e => {
-                            deleteDB()
                             deleteCanvas()
                         }}>
                             <path

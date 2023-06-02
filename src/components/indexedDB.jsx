@@ -69,6 +69,9 @@ export function deleteDB() {
     DBDeleteReq.onsuccess = function (event) {
         console.log("Database deleted successfully");
     };
+    DBDeleteReq.onerror = function (e) {
+        console.log(e.target.error)
+    }
     localStorage.removeItem("notebookNames");
 }
 

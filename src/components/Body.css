@@ -22,16 +22,30 @@ body {
     min-height: 400px;
 }
 .menu {
+    top: 73px;
     position: absolute;
-    text-align: center;
+    text-align: left;
     background-color: white;
     right: 100%;
-    width: 300px;
+    width: 250px;
     min-height: 100vh;
     opacity: 0.8;
     z-index: 50;
     transition: all 0.5s ease;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    overflow: hidden; /* Add this line */
+}
+.menu-item {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #f2f2f2;
+    transition: background-color 0.3s ease;
+    text-align: left;
+}
+.menu-item:hover {
+    cursor: pointer;
+    background-color: #d4d4d4;
 }
 body.menu-visible .menu  {
     transform: translateX(100%);
@@ -125,6 +139,20 @@ body.menu-visible .menu  {
 .small-text{
     font-size: 14px;
     }
+.small-text-alert{
+    color: red;
+    font-size: 14px;
+    margin-bottom: 0.3em;
+}
+.small-text-alert:before{
+    content: '\2139';
+    color: red;
+}
+
+.delete-everything{
+    color: red;
+}
+
 .hide{
     display: none;
 }
@@ -309,7 +337,7 @@ hr.below-thickness {
 }
 
 .loading-circle::after {
-    content: "Creating new notebook if it takes too long, refresh the page";
+    content: "Creating new object store, it may take a while";
     display: inline-block;
     font-size: 16px;
     color: #ffffff;
@@ -363,19 +391,40 @@ hr.below-thickness {
 .notebook-grid {
     margin-top: 1em;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     grid-gap: 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .notebook-item {
     display: flex;
+    position: relative;
     flex-direction: column;
+    min-width: 90px;
     align-items: center;
     justify-content: center;
     background-color: #f2f2f2;
     padding: 20px;
     opacity: 1;
     border-radius: 5px;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+.trash {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    border-radius: 5px;
+}
+.trash:hover{
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    border: 1px solid red;
+}
+.trash-icon{
+    width: 20px;
+    fill: red;
 }
 
 .notebook-item:hover{
