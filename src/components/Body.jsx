@@ -50,7 +50,9 @@ export function Body() {
                 console.log("Unable to add new notebook")
             }
             addStep()
-            setIsLoading(false);
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 500);
         }
     }
 
@@ -62,10 +64,10 @@ export function Body() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newNotebookName, setNewNotebookName] = useState("");
     const inputRef = useRef(null); // Add a useRef for the input element
+    const [deletedNotebooks, setDeletedNotebooks] = useState([]);
     const handleChange = (event) => {
         const value = event.target.value;
         setNewNotebookName(value);
-        localStorage.setItem('notebook', value);
     };
 
     const isExceeded = newNotebookName.length > 49;
@@ -103,14 +105,18 @@ export function Body() {
         setNewNotebookName("");
     };
 
+
     const handleCreateNotebook = () => {
         if (newNotebookName.trim() !== "") {
             setNotebookName(newNotebookName);
+            localStorage.setItem('notebook', newNotebookName);
             closeModal();
         } else {
             alert("Please enter a valid notebook name.");
         }
     };
+
+
 
     return (
         <div>
@@ -125,7 +131,6 @@ export function Body() {
                     />
                 ) : (
                     <div>
-                        <Menu />
                         <div className="notebook-grid">
                             {notebookNames.filter((notebook) => notebook.username === localStorage.getItem("user")).map((notebook, index) => (
                                 <div
@@ -155,6 +160,7 @@ export function Body() {
                                                         notebookNames.splice(index, 1);
                                                         // Update the local storage with the modified notebookNames array
                                                         localStorage.setItem('notebookNames', JSON.stringify(notebookNames));
+                                                        setDeletedNotebooks([deletedNotebooks.push(notebook.notebookName)])
                                                         setNotebookName("")
                                                     }
                                                 };
@@ -213,9 +219,7 @@ export function Body() {
                     </div>
                 )}
 
-                <footer>
-                    <div className="content-container">@My notebook 2023</div>
-                </footer>
+
             </div>
         </div>
     );

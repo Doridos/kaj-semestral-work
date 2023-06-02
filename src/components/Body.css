@@ -174,17 +174,7 @@ body.menu-visible .menu  {
     color: gray;
 }
 
-.page footer {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: gray;
-}
 
-.page footer .content-container {
-    align-self: flex-end;
-}
 
 aside input[type=text]{
     margin: 5px;
@@ -337,7 +327,7 @@ hr.below-thickness {
 }
 
 .loading-circle::after {
-    content: "Creating new object store, it may take a while";
+    content: "Creating new notebook, it may take a while";
     display: inline-block;
     font-size: 16px;
     color: #ffffff;

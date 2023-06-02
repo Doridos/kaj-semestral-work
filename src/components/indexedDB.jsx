@@ -1,3 +1,58 @@
+import React from 'react';
+import { PDFDocument } from 'pdf-lib';
+
+export async function createPDFFromDBRecords(objectKey) {
+    const pdfDoc = await PDFDocument.create();
+
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(localStorage.getItem('user'));
+
+        request.onsuccess = function (e) {
+            const db = e.target.result;
+            const transaction = db.transaction('notebookNames');
+            const objectStore = transaction.objectStore('notebookNames');
+
+            const getRequest = objectStore.get(objectKey);
+
+            getRequest.onsuccess = async (e) => {
+                const object = e.target.result;
+                console.log(object);
+                if (object) {
+                    const pages = object.pages; // Assuming pages is an array of data URLs
+
+                    for (const pageData of pages) {
+                        const imageData = pageData.split(',')[1]; // Extract base64 image data
+                        const bytes = Uint8Array.from(atob(imageData), (c) => c.charCodeAt(0)); // Convert base64 to Uint8Array
+                        const image = await pdfDoc.embedPng(bytes);
+                        const page = pdfDoc.addPage();
+
+                        page.drawImage(image, {
+                            x: 0,
+                            y: 0,
+                            width: page.getWidth(),
+                            height: page.getHeight(),
+                            opacity: 1,
+                        });
+                    }
+
+                    const pdfBytes = await pdfDoc.save();
+                    resolve(new Blob([pdfBytes], { type: 'application/pdf' }));
+                } else {
+                    reject(new Error(`Object with key '${objectKey}' not found in object store.`));
+                }
+            };
+
+            getRequest.onerror = (e) => {
+                reject(e.target.error);
+            };
+        };
+
+        request.onerror = (e) => {
+            reject(e.target.error);
+        };
+    });
+}
+
 export function storeToNotebook(name, page, data) {
     console.log("Storing page " + page )
     let r = indexedDB.open(localStorage.getItem("user"))
@@ -75,7 +130,6 @@ export function deleteDB() {
         notebooksToDelete.forEach(function (notebookName) {
             let request = objectStore.delete(notebookName.notebookName);
             request.onsuccess = function (e) {
-                console.log("aaaa")
                 if (localStorage.getItem("notebookNames")) {
                     const filteredNotebookNames = notebookNames.filter(n => n.username !== localStorage.getItem("user"));
                     localStorage.setItem('notebookNames', JSON.stringify(filteredNotebookNames));

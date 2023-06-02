@@ -1,11 +1,11 @@
 import {deleteDB} from "./indexedDB.jsx";
-import React from "react";
+import React, {useState} from "react";
 
-export function Menu(){
+export function Menu(props){
     return <nav className="menu">
-        <div className="menu-item">Notebooks</div>
-        <div className="menu-item">Voice records</div>
-        <div className="menu-item">To do</div>
+        <div className="menu-item" onClick={event => {props.handleValueChange('notebooks'); }}>Notebooks</div>
+        <div className="menu-item" onClick={() => props.handleValueChange('audio')}>Voice records</div>
+        <div className="menu-item" onClick={() => props.handleValueChange('todo')}>To do</div>
         <div className="menu-item delete-everything" onClick= {
             e=>{
                 let text = `Do you want to delete every notebook?\nIf yes press OK, otherwise press Cancel.`;
