@@ -13,20 +13,20 @@ let intervalId; // Variable to store the interval reference
 let pageForSave = 1
 let nameForSave = ""
 let allowedToSave = false
-function logOnline() {
-    intervalId = setInterval(function() {
-        if(document.querySelector('aside.connection-status')){
-            document.querySelector('aside.connection-status').classList.add("hide")
-        }
-
-        if(document.querySelector('canvas') && allowedToSave){
-            console.log(allowedToSave)
-            console.log("Online");
-            console.log(pageForSave)
-            storeToNotebook(nameForSave, pageForSave, document.querySelector('canvas').toDataURL())
-        }
-    }, 2000);
-}
+// function logOnline() {
+//     intervalId = setInterval(function() {
+//         if(document.querySelector('aside.connection-status')){
+//             document.querySelector('aside.connection-status').classList.add("hide")
+//         }
+//
+//         if(document.querySelector('canvas') && allowedToSave){
+//             console.log(allowedToSave)
+//             console.log("Online");
+//             console.log(pageForSave)
+//             storeToNotebook(nameForSave, pageForSave, document.querySelector('canvas').toDataURL())
+//         }
+//     }, 2000);
+// }
 
 function logDisconnected() {
     console.log("Disconnected");
@@ -39,7 +39,7 @@ function logDisconnected() {
 function handleConnectionStatus() {
     if (navigator.onLine) {
         if (!intervalId) {
-            logOnline();
+            // logOnline();
         }
     } else {
         logDisconnected();
@@ -174,6 +174,7 @@ export function redoStep() {
     }
 }
 export function addStep() {
+    console.log("addstep")
     steps++;
     console.log(document.querySelector('canvas'))
     if (steps < history.length) {
@@ -225,7 +226,7 @@ export function addImage() {
     isImageInputMode = true
     isTextInputMode = false
     const restorePicture = new Image();
-    restorePicture.src = history[steps];
+    restorePicture.src = history[steps === -1 ? 0 : steps];
 
     const fileInput = document.createElement("input");
     fileInput.type = "file";

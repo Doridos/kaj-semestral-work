@@ -9,6 +9,13 @@ import {deleteDB} from "./indexedDB.jsx";
 import {Menu} from "./Menu.jsx";
 
 export function Body() {
+    let r = indexedDB.open(localStorage.getItem('user'), 2)
+    r.onupgradeneeded = function(e) {
+        let db = e.target.result
+        db.createObjectStore("notebookNames", {keyPath: 'name'})
+        console.log("created")
+        db.close()
+    }
 
     let notebookNames = [];
     if (localStorage.getItem("notebookNames")) {
@@ -19,20 +26,18 @@ export function Body() {
     function updateNotebookNames(name) {
         let username = localStorage.getItem("user")
 
-        if (!notebookNames.some((notebook) => notebook.notebookName === name)) {
+        if (!notebookNames.some((notebook) => notebook.notebookName === name && notebook.username === username)) {
+            console.log(notebookNames)
             setIsLoading(true);
             notebookNames.push({
                 username: username,
                 notebookName: name,
             });
             localStorage.setItem("notebookNames", JSON.stringify(notebookNames));
+            console.log(notebookNames)
 
-            let r = indexedDB.open(username, 2)
-            r.onupgradeneeded = function(e) {
-                let db = e.target.result
-                db.createObjectStore("notebookNames", {keyPath: 'name'})
-                console.log("created")
-            }
+            let r = indexedDB.open(username)
+
             r.onsuccess = function (e){
                 let db = e.target.result
                 let t = db.transaction(["notebookNames"], "readwrite")
@@ -40,9 +45,12 @@ export function Body() {
                     name: name,
                     pages: []
                 })
-                addStep()
-                setIsLoading(false);
             }
+            r.onerror = function (e) {
+                console.log("Unable to add new notebook")
+            }
+            addStep()
+            setIsLoading(false);
         }
     }
 

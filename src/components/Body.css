@@ -413,8 +413,9 @@ hr.below-thickness {
     word-break: break-word;
 }
 .trash {
+
     position: absolute;
-    bottom: 5px;
+    bottom: 0;
     right: 5px;
     border-radius: 5px;
 }
@@ -426,6 +427,7 @@ hr.below-thickness {
     width: 20px;
     fill: red;
 }
+
 
 .notebook-item:hover{
     cursor: pointer;
