@@ -1,8 +1,29 @@
 import React, {useState} from "react";
-import './TopBar.css'
+import './topbar.css'
 import logoutImage from '../images/logout.svg'
 
 export function TopBar(props){
+    function logDisconnected() {
+        console.log("Disconnected");
+        document.querySelector('aside.connection-status').classList.remove("hide")
+    }
+
+    function handleConnectionStatus() {
+        if (navigator.onLine) {
+            if(document.querySelector('aside.connection-status')){
+                document.querySelector('aside.connection-status').classList.add("hide")
+            }
+        } else {
+            logDisconnected();
+        }
+    }
+
+// Add event listeners for online and offline events
+    window.addEventListener("online", handleConnectionStatus);
+    window.addEventListener("offline", handleConnectionStatus);
+
+// Check initial connection status
+    handleConnectionStatus();
     let username = props.username;
     const [menuVisible, setMenuVisible] = useState(true);
 
@@ -25,6 +46,9 @@ export function TopBar(props){
                 </svg>
                 <p>My notebook</p>
             </div>
+            <aside className="connection-status hide">
+                <p>You are currently offline.</p>
+            </aside>
             <div className="right-side"><p>{username}<span id="logout-icon">
                 <img className="icon" onClick= {event => {localStorage.removeItem("user"); props.function(""); localStorage.removeItem("notebook")}}
                                                                                   src={logoutImage}

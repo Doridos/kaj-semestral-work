@@ -134,3 +134,19 @@ p{
     display: inline-block;
     vertical-align: middle;
 }
+.connection-status {
+    position: fixed;
+    left: 150px;
+    background-color: #f44336;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hide {
+    display: none;
+}

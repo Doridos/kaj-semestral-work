@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import './WelcomePage.css'
+import './welcomepage.css'
 import {App} from "./components/App.jsx";
 import {Body} from "./components/Body.jsx";
 

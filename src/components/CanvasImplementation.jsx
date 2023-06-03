@@ -62,7 +62,7 @@ export function CanvasImplementation(props){
 
 
     function highlightEraser(){
-        setLastColor(color)
+        setLastColor(color === "none" ? "#000000" : color)
         setColor("#FFFFFF")
         document.querySelector('.svg-icon-pen').classList.remove("highlighted")
         document.querySelector('.text').classList.remove("highlighted")
@@ -147,9 +147,6 @@ export function CanvasImplementation(props){
                 <div className="notebook-name">{props.name}</div>
                 <section>
                     < Canvas width={794} height={1123} color={color} name={props.name}/>
-                    <aside className="connection-status hide">
-                        <p >You are offline automatic saving is turned off.</p>
-                    </aside>
                     <aside className="close-notebook" onClick= {event => {
                         storeToNotebook(props.name, page, document.querySelector('canvas').toDataURL())
                         props.function("")

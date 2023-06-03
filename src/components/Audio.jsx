@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './Audio.css';
+import './audio.css';
 
 export function Audio() {
     useEffect(() => {

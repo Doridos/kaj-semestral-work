@@ -1,4 +1,4 @@
-import './Canvas.css'
+import './canvas.css'
 import {useOnDraw} from './Hooks.jsx'
 import {deleteDB, getFromNotebook, storeToNotebook} from "./indexedDB.jsx";
 
@@ -13,46 +13,6 @@ let intervalId; // Variable to store the interval reference
 let pageForSave = 1
 let nameForSave = ""
 let allowedToSave = false
-// function logOnline() {
-//     intervalId = setInterval(function() {
-//         if(document.querySelector('aside.connection-status')){
-//             document.querySelector('aside.connection-status').classList.add("hide")
-//         }
-//
-//         if(document.querySelector('canvas') && allowedToSave){
-//             console.log(allowedToSave)
-//             console.log("Online");
-//             console.log(pageForSave)
-//             storeToNotebook(nameForSave, pageForSave, document.querySelector('canvas').toDataURL())
-//         }
-//     }, 2000);
-// }
-
-function logDisconnected() {
-    console.log("Disconnected");
-    document.querySelector('aside.connection-status').classList.remove("hide")
-    clearInterval(intervalId); // Clear the interval
-    intervalId = undefined; // Reset the interval reference
-
-}
-
-function handleConnectionStatus() {
-    if (navigator.onLine) {
-        if (!intervalId) {
-            // logOnline();
-        }
-    } else {
-        logDisconnected();
-    }
-}
-
-// Add event listeners for online and offline events
-window.addEventListener("online", handleConnectionStatus);
-window.addEventListener("offline", handleConnectionStatus);
-
-// Check initial connection status
-handleConnectionStatus();
-
 
 
 const Canvas = ({
@@ -99,6 +59,11 @@ const Canvas = ({
                    onClick={e => {renderText(e)
                    }}
                    onMouseUp={event => {
+                       if(!isTextInputMode && !isImageInputMode) {
+                           addStep()
+                       }
+                   }}
+                   onTouchEnd={event => {
                        if(!isTextInputMode && !isImageInputMode) {
                            addStep()
                        }

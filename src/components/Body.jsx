@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./theme.css";
 import "primereact/resources/primereact.min.css";
-import "./Body.css";
+import "./body.css";
 
 import { CanvasImplementation } from "./CanvasImplementation.jsx";
 import {addNewPage, addStep, setName, setPageCanvas} from "./Canvas.jsx";
@@ -223,7 +223,6 @@ export function Body() {
                         </div>
                     </div>
                 )}
-
 
             </div>
         </div>

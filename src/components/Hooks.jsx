@@ -8,6 +8,11 @@ export function useOnDraw(onDraw, name){
 
     const isDrawingRef = useRef(false)
 
+
+    const touchMovePreventDefaultListenerRef = useRef(null)
+    const touchMoveListenerRef = useRef(null)
+    const touchStartListenerRef = useRef(null)
+    const touchEndListenerRef = useRef(null)
     const mouseMoveListenerRef = useRef(null)
     const mouseDownListenerRef = useRef(null)
     const mouseUpListenerRef = useRef(null)
@@ -58,6 +63,55 @@ export function useOnDraw(onDraw, name){
         initMouseMoveListener();
         initMouseDownListener();
         initMouseUpListener();
+        initTouchMoveListener();
+        initTouchStartListener();
+        initTouchEndListener();
+        initTouchMovePreventDefaultListener();
+    }
+
+    function initTouchMovePreventDefaultListener() {
+        const touchMovePreventDefaultListener = (e) => {
+            if (isDrawingRef.current) {
+                e.preventDefault();
+            }
+        };
+        touchMovePreventDefaultListenerRef.current = touchMovePreventDefaultListener;
+        window.addEventListener("touchmove", touchMovePreventDefaultListener, {
+            passive: false,
+        });
+    }
+    function initTouchMoveListener() {
+        const touchMoveListener = (e) => {
+            if (isDrawingRef.current) {
+                const touch = e.touches[0];
+                const point = convertToPointInCanvas(touch.clientX, touch.clientY);
+                const ctx = canvasRef.current.getContext("2d");
+                if (onDraw) onDraw(ctx, point, previousPointRef.current);
+                previousPointRef.current = point;
+            }
+        };
+        touchMoveListenerRef.current = touchMoveListener;
+        window.addEventListener("touchmove", touchMoveListener);
+    }
+
+    function initTouchStartListener() {
+        const touchStartListener = (e) => {
+            isDrawingRef.current = true;
+            const touch = e.touches[0];
+            const point = convertToPointInCanvas(touch.clientX, touch.clientY);
+            previousPointRef.current = point;
+        };
+        touchStartListenerRef.current = touchStartListener;
+        canvasRef.current.addEventListener("touchstart", touchStartListener);
+    }
+
+    function initTouchEndListener() {
+        const touchEndListener = () => {
+            isDrawingRef.current = false;
+            previousPointRef.current = null;
+        };
+        touchEndListenerRef.current = touchEndListener;
+        window.addEventListener("touchend", touchEndListener);
     }
 
     function initMouseMoveListener(){
