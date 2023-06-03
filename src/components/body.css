@@ -244,6 +244,7 @@ hr.below-thickness {
 .svg-icon-undo:hover,
 .svg-icon-redo:hover,
 .svg-icon-pen:hover,
+.svg-icon-text:hover,
 .svg-icon-eraser:hover {
     cursor: pointer;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px !important;
@@ -266,7 +267,7 @@ hr.below-thickness {
     padding-left: 5px;
     padding-top: 3px;
 }
-.svg-icon-pen{
+.svg-icon-pen, .svg-icon-text{
     min-width: 2em;
     height: 2em;
     margin-right: 0.3em;

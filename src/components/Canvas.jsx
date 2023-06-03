@@ -164,16 +164,28 @@ export function addStep() {
     console.log(history);
 }
 
-export function activateTextInput(){
-    allowedToSave = false
-    const span = document.createElement("span")
-    span.classList.add("info")
-    span.innerText = "Hint \n Click anywhere on canvas \n and enter the text."
-    document.body.append(span)
-    isTextInputMode = true
-    document.querySelector('canvas').style.cursor = "text"
+export function activateTextInput() {
+    allowedToSave = false;
+
+    // Check if the span with class "info" already exists
+    const existingSpan = document.querySelector("span.info");
+    if (existingSpan) {
+        return; // Exit the function if it already exists
+    }
+
+    const span = document.createElement("span");
+    span.classList.add("info");
+    span.innerText = "Hint \n Click anywhere on canvas \n and enter the text.";
+    document.body.append(span);
+
+    isTextInputMode = true;
+    document.querySelector('canvas').style.cursor = "text";
 }
 export function deactivateTextInput(){
+    const existingSpan = document.querySelector("span.info");
+    if (existingSpan) {
+        document.body.removeChild(existingSpan);
+    }
     allowedToSave = true
     isTextInputMode = false
     document.querySelector('canvas').style.cursor = "crosshair"

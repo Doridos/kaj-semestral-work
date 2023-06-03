@@ -186,11 +186,11 @@ export function Todo() {
             <div className="todo-container">
                 <h1>What's your plan for today?</h1>
                 <div className="btn-container">
-                    <label className="switch btn-color-mode-switch">
+                    <div className="switch btn-color-mode-switch">
                         <input type="checkbox" name="color_mode" id="color_mode" checked={showCompleted} onChange={handleSwitchChange}/>
                         <label htmlFor="color_mode" data-on="Completed" data-off="Planned"
                                className="btn-color-mode-switch-inner"></label>
-                    </label>
+                    </div>
                 </div>
 
                 {!showCompleted && (

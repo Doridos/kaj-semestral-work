@@ -12,7 +12,6 @@ import Canvas, {
     setPageCanvas, undoStep
 } from "./Canvas.jsx";
 import {ColorPicker} from "primereact/colorpicker";
-import {Menu} from "./Menu.jsx";
 
 function Slider({ value, min, max, step, onChange }) {
     return (
@@ -149,6 +148,9 @@ export function CanvasImplementation(props){
                     < Canvas width={794} height={1123} color={color} name={props.name}/>
                     <aside className="close-notebook" onClick= {event => {
                         storeToNotebook(props.name, page, document.querySelector('canvas').toDataURL())
+                        highlightPen()
+                        deactivateTextInput()
+                        deactivateImageInput()
                         props.function("")
                         localStorage.removeItem("notebook")
                         emptyHistory()
@@ -198,6 +200,7 @@ export function CanvasImplementation(props){
                             if(dontShow1) {
                                 e.stopPropagation()
                                 setColor(colorPicker1)
+                                document.querySelector('.svg-icon-pen').style.setProperty('fill', colorPicker1, 'important');
                                 setDontShow1(false)
                                 setDontShow2(true)
                                 setDontShow3(true)
@@ -207,6 +210,7 @@ export function CanvasImplementation(props){
                         }}><ColorPicker value={colorPicker1} onChange={(e) =>
                         {setColorPicker1("#" + e.value)
                             setColor("#" + e.value)
+                            document.querySelector('.svg-icon-pen').style.setProperty('fill', "#" + e.value, 'important');
                         }} /></div>
                         <div className="colorPicker" onClickCapture={e => {
                             highlightPen()
@@ -216,6 +220,7 @@ export function CanvasImplementation(props){
                             if(dontShow2) {
                                 e.stopPropagation()
                                 setColor(colorPicker2)
+                                document.querySelector('.svg-icon-pen').style.setProperty('fill', colorPicker2, 'important');
                                 setDontShow1(true)
                                 setDontShow2(false)
                                 setDontShow3(true)
@@ -224,10 +229,8 @@ export function CanvasImplementation(props){
 
                         }}><ColorPicker value={colorPicker2} onChange={(e) =>
                         {setColorPicker2("#" + e.value)
-                            console.log(colorPicker2)
-                            console.log(color)
-                            console.log("#" + e.value)
                             setColor("#" + e.value)
+                            document.querySelector('.svg-icon-pen').style.setProperty('fill', "#" + e.value, 'important');
                         }} /></div>
 
                         <div className="colorPicker" onClickCapture={e => {
@@ -238,6 +241,7 @@ export function CanvasImplementation(props){
                             if(dontShow3) {
                                 e.stopPropagation()
                                 setColor(colorPicker3)
+                                document.querySelector('.svg-icon-pen').style.setProperty('fill', colorPicker3, 'important');
                                 setDontShow1(true)
                                 setDontShow2(true)
                                 setDontShow3(false)
@@ -245,9 +249,10 @@ export function CanvasImplementation(props){
                             }
 
                         }}><ColorPicker value={colorPicker3} onChange={(e) =>
-                        {   console.log(e.value)
+                        {
                             setColorPicker3("#" + e.value)
                             setColor("#" + e.value)
+                            document.querySelector('.svg-icon-pen').style.setProperty('fill', "#" + e.value, 'important');
                         }} /></div>
 
                         <div className="colorPicker" onClickCapture={e => {
@@ -258,6 +263,7 @@ export function CanvasImplementation(props){
                             if(dontShow4) {
                                 e.stopPropagation()
                                 setColor(colorPicker4)
+                                document.querySelector('.svg-icon-pen').style.setProperty('fill', colorPicker4, 'important');
                                 setDontShow1(true)
                                 setDontShow2(true)
                                 setDontShow3(true)
@@ -267,6 +273,7 @@ export function CanvasImplementation(props){
                         }}><ColorPicker value={colorPicker4} onChange={(e) =>
                         {setColorPicker4("#" + e.value)
                             setColor("#" + e.value)
+                            document.querySelector('.svg-icon-pen').style.setProperty('fill', "#" + e.value, 'important');
                         }} /></div>
 
                         <hr/>
@@ -300,12 +307,16 @@ export function CanvasImplementation(props){
                             deactivateTextInput()
                             deactivateImageInput()
                             highlightEraser()
+                            setDontShow1(true)
+                            setDontShow2(true)
+                            setDontShow3(true)
+                            setDontShow4(true)
                         }}>
                             <path
                                 d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
                         </svg>
 
-                        <svg className="svg-icon-pen text" viewBox="0 0 20 20" onClick={event => {
+                        <svg className="svg-icon-text text" viewBox="0 0 20 20" onClick={event => {
                             activateTextInput()
                             highlightText()
                             setDontShow1(true)
