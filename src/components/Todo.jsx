@@ -1,3 +1,125 @@
-export function Todo(props) {
-    return <div>aaa</div>
+import React, { useState } from 'react';
+import './Todo.css';
+
+export function Todo() {
+    const [todos, setTodos] = useState([]);
+    const [completedTodos, setCompletedTodos] = useState([]);
+    const [newTodo, setNewTodo] = useState('');
+    const [showCompleted, setShowCompleted] = useState(false);
+
+    const handleInputChange = (event) => {
+        setNewTodo(event.target.value);
+    };
+
+    const handleAddTodo = (event) => {
+        event.preventDefault();
+        if (newTodo.trim() === '') return;
+        const todo = { text: newTodo, completed: false };
+        setTodos([todo, ...todos]);
+        setNewTodo('');
+    };
+
+    const handleTodoClick = (index) => {
+        const clickedTodo = showCompleted ? completedTodos[index] : todos[index];
+        clickedTodo.completed = !clickedTodo.completed;
+
+        if (clickedTodo.completed) {
+            if (showCompleted) {
+                setCompletedTodos((prevCompletedTodos) =>
+                    prevCompletedTodos.filter((todo) => todo !== clickedTodo)
+                );
+                setTodos((prevTodos) => [clickedTodo, ...prevTodos]);
+            } else {
+                setCompletedTodos((prevCompletedTodos) => [clickedTodo, ...prevCompletedTodos]);
+                setTodos((prevTodos) => prevTodos.filter((todo) => todo !== clickedTodo));
+            }
+        } else {
+            if (showCompleted) {
+                setCompletedTodos((prevCompletedTodos) =>
+                    prevCompletedTodos.filter((todo) => todo !== clickedTodo)
+                );
+                setTodos((prevTodos) => [clickedTodo, ...prevTodos]);
+            } else {
+                setTodos((prevTodos) => prevTodos.filter((todo) => todo !== clickedTodo));
+                setCompletedTodos((prevCompletedTodos) => [clickedTodo, ...prevCompletedTodos]);
+            }
+        }
+    };
+
+    const handleDeleteCompleted = (index) => {
+        const updatedCompletedTodos = [...completedTodos];
+        updatedCompletedTodos.splice(index, 1);
+        setCompletedTodos(updatedCompletedTodos);
+    };
+
+    const handleSwitchChange = () => {
+        setShowCompleted(!showCompleted);
+    };
+
+    const activeTodos = showCompleted ? completedTodos : todos;
+
+    return (
+        <section className="page">
+            <div className="todo-container">
+                <h1>What's your plan for today?</h1>
+                <div className="btn-container">
+                    <label className="switch btn-color-mode-switch">
+                        <input type="checkbox" name="color_mode" id="color_mode" checked={showCompleted} onChange={handleSwitchChange}/>
+                        <label htmlFor="color_mode" data-on="Completed" data-off="Planned"
+                               className="btn-color-mode-switch-inner"></label>
+                    </label>
+                </div>
+
+                {!showCompleted && (
+                    <form onSubmit={handleAddTodo}>
+                        <input
+                            type="text"
+                            placeholder="Enter a new todo"
+                            value={newTodo}
+                            onChange={handleInputChange}
+                        />
+                    </form>
+                )}
+
+                <div className="todo-list">
+                    {activeTodos.map((todo, index) => (
+                        <TodoItem
+                            key={index}
+                            todo={todo}
+                            handleClick={() => handleTodoClick(index)}
+                            handleDelete={() => handleDeleteCompleted(index)}
+                        />
+                    ))}
+                </div>
+
+                {showCompleted && completedTodos.length > 0 && (
+                    <button className="delete-completed-button" onClick={handleDeleteCompleted}>
+                        Delete Completed
+                    </button>
+                )}
+            </div>
+        </section>
+    );
+}
+
+function TodoItem({ todo, handleClick, handleDelete }) {
+    const handleDeleteClick = (event) => {
+        event.stopPropagation(); // Stop event propagation
+        handleDelete();
+    };
+
+    return (
+        <div className={`todo-item ${todo.completed ? 'completed' : ''}`} onClick={handleClick}>
+            <span className="todo-text">{todo.text}</span>
+            {todo.completed && (
+                <span className="todo-icon">
+                    ✓
+                    <button className="delete-todo" onClick={handleDeleteClick}><svg className="trash-icon" viewBox="0 0 20 18">
+            <path
+                d="M17.114,3.923h-4.589V2.427c0-0.252-0.207-0.459-0.46-0.459H7.935c-0.252,0-0.459,0.207-0.459,0.459v1.496h-4.59c-0.252,0-0.459,0.205-0.459,0.459c0,0.252,0.207,0.459,0.459,0.459h1.51v12.732c0,0.252,0.207,0.459,0.459,0.459h10.29c0.254,0,0.459-0.207,0.459-0.459V4.841h1.511c0.252,0,0.459-0.207,0.459-0.459C17.573,4.127,17.366,3.923,17.114,3.923M8.394,2.886h3.214v0.918H8.394V2.886z M14.686,17.114H5.314V4.841h9.372V17.114z M12.525,7.306v7.344c0,0.252-0.207,0.459-0.46,0.459s-0.458-0.207-0.458-0.459V7.306c0-0.254,0.205-0.459,0.458-0.459S12.525,7.051,12.525,7.306M8.394,7.306v7.344c0,0.252-0.207,0.459-0.459,0.459s-0.459-0.207-0.459-0.459V7.306c0-0.254,0.207-0.459,0.459-0.459S8.394,7.051,8.394,7.306"></path>
+        </svg></button>
+                </span>
+            )}
+        </div>
+    );
 }
