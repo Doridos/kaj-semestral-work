@@ -1,7 +1,38 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './Todo.css';
 
 export function Todo() {
+    useEffect(() => {
+        function fetchData() {
+            const username = localStorage.getItem('user');
+            const r = indexedDB.open(username);
+
+            r.onsuccess = function (e) {
+                const db = e.target.result;
+                const t = db.transaction(["notebookNames"], "readonly");
+                const objectStore = t.objectStore("notebookNames");
+                const request = objectStore.get('todo-1-items');
+
+                request.onsuccess = function (e) {
+                    if(e.target.result){
+                        const record = e.target.result.todos;
+                        let notCompleted = record.filter(t => t.completed === false)
+                        let completed = record.filter(t => t.completed === true)
+                        setTodos(notCompleted);
+                        setCompletedTodos(completed)
+                    }
+
+                };
+            };
+        }
+
+        fetchData();
+
+        // Cleanup function
+        return () => {
+            // Perform any necessary cleanup here
+        };
+    }, []);
     const [todos, setTodos] = useState([]);
     const [completedTodos, setCompletedTodos] = useState([]);
     const [newTodo, setNewTodo] = useState('');
@@ -17,6 +48,38 @@ export function Todo() {
         const todo = { text: newTodo, completed: false };
         setTodos([todo, ...todos]);
         setNewTodo('');
+        const r = indexedDB.open(localStorage.getItem('user'));
+        r.onsuccess = function (e) {
+            let db = e.target.result;
+            let t = db.transaction(["notebookNames"], "readwrite"); // Use "readonly" mode for the transaction
+            let objectStore = t.objectStore("notebookNames");
+            let request = objectStore.get('todo-1-items'); // Get the record by the username
+            request.onsuccess = function (e) {
+                let record = e.target.result;
+                console.log(record)
+                if (!record) {
+                    console.log("doesnt")
+                    let t = db.transaction(["notebookNames"], "readwrite");
+                    let objectStore = t.objectStore("notebookNames");
+                    objectStore.add({
+                        name: 'todo-1-items',
+                        todos: []
+                    });
+                }
+                else {
+                    record.todos = [todo, ...record.todos]
+                    const updateRequest = t.objectStore("notebookNames").put(record);
+
+                    updateRequest.onsuccess = function(event) {
+                        console.log('Record updated successfully');
+                    };
+
+                    updateRequest.onerror = function(event) {
+                        console.log('Error updating record: ' + event.target.error);
+                    };
+                }
+            };
+        };
     };
 
     const handleTodoClick = (index) => {
@@ -44,12 +107,72 @@ export function Todo() {
                 setCompletedTodos((prevCompletedTodos) => [clickedTodo, ...prevCompletedTodos]);
             }
         }
+        const r = indexedDB.open(localStorage.getItem('user'));
+        r.onsuccess = function (e) {
+            let db = e.target.result;
+            let t = db.transaction(["notebookNames"], "readwrite"); // Use "readonly" mode for the transaction
+            let objectStore = t.objectStore("notebookNames");
+            let request = objectStore.get('todo-1-items'); // Get the record by the username
+            request.onsuccess = function (e) {
+                let record = e.target.result;
+                record.todos = todos.concat(completedTodos)
+                const updateRequest = t.objectStore("notebookNames").put(record);
+
+                updateRequest.onsuccess = function (event) {
+                    console.log('Record updated successfully');
+                };
+
+                updateRequest.onerror = function (event) {
+                    console.log('Error updating record: ' + event.target.error);
+                };
+            }
+        }
     };
 
     const handleDeleteCompleted = (index) => {
-        const updatedCompletedTodos = [...completedTodos];
-        updatedCompletedTodos.splice(index, 1);
-        setCompletedTodos(updatedCompletedTodos);
+        if(index === -1){
+            setCompletedTodos( [])
+            const r = indexedDB.open(localStorage.getItem('user'));
+            r.onsuccess = function (e) {
+                let db = e.target.result;
+                let t = db.transaction(["notebookNames"], "readwrite"); // Use "readonly" mode for the transaction
+                let objectStore = t.objectStore("notebookNames");
+                let request = objectStore.get('todo-1-items'); // Get the record by the username
+                request.onsuccess = function (e) {
+                    let record = e.target.result;
+                    record.todos = todos
+                    const updateRequest = t.objectStore("notebookNames").put(record);
+
+
+                    updateRequest.onerror = function (event) {
+                        console.log('Error updating record: ' + event.target.error);
+                    };
+                }
+            }
+        }
+        else {
+            const updatedCompletedTodos = [...completedTodos];
+            updatedCompletedTodos.splice(index, 1);
+            setCompletedTodos(updatedCompletedTodos);
+            const r = indexedDB.open(localStorage.getItem('user'));
+            r.onsuccess = function (e) {
+                let db = e.target.result;
+                let t = db.transaction(["notebookNames"], "readwrite"); // Use "readonly" mode for the transaction
+                let objectStore = t.objectStore("notebookNames");
+                let request = objectStore.get('todo-1-items'); // Get the record by the username
+                request.onsuccess = function (e) {
+                    let record = e.target.result;
+                    record.todos = todos.concat(updatedCompletedTodos)
+                    const updateRequest = t.objectStore("notebookNames").put(record);
+
+
+                    updateRequest.onerror = function (event) {
+                        console.log('Error updating record: ' + event.target.error);
+                    };
+                }
+            }
+        }
+
     };
 
     const handleSwitchChange = () => {
@@ -93,7 +216,7 @@ export function Todo() {
                 </div>
 
                 {showCompleted && completedTodos.length > 0 && (
-                    <button className="delete-completed-button" onClick={handleDeleteCompleted}>
+                    <button className="delete-completed-button" onClick={ e => handleDeleteCompleted(-1)}>
                         Delete Completed
                     </button>
                 )}

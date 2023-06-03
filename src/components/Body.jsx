@@ -108,9 +108,14 @@ export function Body() {
 
     const handleCreateNotebook = () => {
         if (newNotebookName.trim() !== "") {
-            setNotebookName(newNotebookName);
-            localStorage.setItem('notebook', newNotebookName);
-            closeModal();
+            if(newNotebookName === 'todo-1-items'){
+                alert("This name is not allowed")
+            }
+            else {
+                setNotebookName(newNotebookName);
+                localStorage.setItem('notebook', newNotebookName);
+                closeModal();
+            }
         } else {
             alert("Please enter a valid notebook name.");
         }

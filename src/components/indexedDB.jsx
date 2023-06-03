@@ -119,24 +119,35 @@ export function getFromNotebook(name, page) {
 }
 
 export function deleteDB() {
-    let notebookNames
-    notebookNames = JSON.parse(localStorage.getItem("notebookNames"));
-    let r = indexedDB.open(localStorage.getItem('user'));
-    r.onsuccess = function (e) {
-        let db = e.target.result;
-        let t = db.transaction(['notebookNames'], 'readwrite');
-        let objectStore = t.objectStore('notebookNames');
-        const notebooksToDelete = notebookNames.filter(n => n.username === localStorage.getItem("user"));
-        notebooksToDelete.forEach(function (notebookName) {
-            let request = objectStore.delete(notebookName.notebookName);
-            request.onsuccess = function (e) {
-                if (localStorage.getItem("notebookNames")) {
-                    const filteredNotebookNames = notebookNames.filter(n => n.username !== localStorage.getItem("user"));
-                    localStorage.setItem('notebookNames', JSON.stringify(filteredNotebookNames));
-                }
-            };
-        });
-    }
+    const databaseName = localStorage.getItem('user');
+
+    const request = indexedDB.deleteDatabase(databaseName);
+
+    request.onsuccess = function() {
+        console.log("Database deleted successfully");
+    };
+
+    request.onerror = function(event) {
+        console.error("Error deleting database:", event.target.error);
+    };
+    // let notebookNames
+    // notebookNames = JSON.parse(localStorage.getItem("notebookNames"));
+    // let r = indexedDB.open(localStorage.getItem('user'));
+    // r.onsuccess = function (e) {
+    //     let db = e.target.result;
+    //     let t = db.transaction(['notebookNames'], 'readwrite');
+    //     let objectStore = t.objectStore('notebookNames');
+    //     const notebooksToDelete = notebookNames.filter(n => n.username === localStorage.getItem("user"));
+    //     notebooksToDelete.forEach(function (notebookName) {
+    //         let request = objectStore.delete(notebookName.notebookName);
+    //         request.onsuccess = function (e) {
+    //             if (localStorage.getItem("notebookNames")) {
+    //                 const filteredNotebookNames = notebookNames.filter(n => n.username !== localStorage.getItem("user"));
+    //                 localStorage.setItem('notebookNames', JSON.stringify(filteredNotebookNames));
+    //             }
+    //         };
+    //     });
+    // }
 }
 
 export async function getPagesCount(name) {
