@@ -65,7 +65,7 @@ const Canvas = ({
 
     const setCanvasRef = useOnDraw(onDraw, name)
     function onDraw(ctx, point, previousPoint){
-        if (!isDragging && !isImageInputMode){
+        if (!isDragging && !isImageInputMode && !isTextInputMode){
             drawLine(previousPoint, point, ctx, color, inputWidth)
         }
 
@@ -77,12 +77,12 @@ const Canvas = ({
                       color,
                       strokeWidth
     ){
+        console.log(inputWidth)
         start = start ?? end;
         ctx.beginPath();
-        ctx.lineWidth = inputWidth;
         ctx.strokeStyle = color;
-        ctx.lineJoin = "round"; // Creates a rounded corner when lines meet
-        ctx.lineCap = "round"; // Round the ends of the lines to create a smoother appearance
+        // ctx.lineJoin = "round";
+        ctx.lineCap = "round";
         ctx.moveTo(start.x, start.y);
         ctx.lineTo(end.x, end.y);
         ctx.stroke();
@@ -106,47 +106,59 @@ const Canvas = ({
     ></canvas>
 }
 }
-function renderText(e){
+function renderText(e) {
     const canvas = document.querySelector('canvas');
     const ctx = canvas.getContext("2d");
+
     if (isTextInputMode) {
-        allowedToSave = false
-        let input = document.createElement("input");
+        allowedToSave = false;
+        const canvasRect = canvas.getBoundingClientRect();
+
+        const input = document.createElement("input");
         input.type = "text";
-        input.id = "input-text"
+        input.id = "input-text";
         input.style.position = "absolute";
-        input.style.top = e.clientY + "px";
+        console.log(e.clientX)
+        input.style.top = e.clientY - 10 + "px";
         input.style.left = e.clientX + "px";
 
         input.addEventListener("keydown", function(event) {
-            if (event.key === "Enter" || event.key === "Escape") { // Enter key
-                allowedToSave = true
+            if (event.key === "Enter" || event.key === "Escape") {
+                allowedToSave = true;
                 event.preventDefault();
                 ctx.font = "15px Helvetica";
                 ctx.fillStyle = "black";
-                ctx.fillText(input.value, e.nativeEvent.offsetX, e.nativeEvent.offsetY);
-                if(document.body.querySelector('#input-text')){
+                ctx.fillText(
+                    input.value,
+                    e.clientX - canvasRect.left,
+                    e.clientY - canvasRect.top
+                );
+
+                if (document.body.querySelector('#input-text')) {
                     document.body.removeChild(input);
                 }
-                if(document.querySelector('.info')) {
-                    const span = document.querySelector('.info')
-                    document.body.removeChild(span)
+                if (document.querySelector('.info')) {
+                    const span = document.querySelector('.info');
+                    document.body.removeChild(span);
                 }
-                addStep()
+
+                addStep();
             }
         });
-        input.addEventListener("focusout", e => {
+
+        input.addEventListener("focusout", () => {
             setTimeout(() => {
                 if (document.body.querySelector("#input-text")) {
                     document.body.removeChild(input);
                 }
             }, 0);
-        })
+        });
 
         document.body.appendChild(input);
         input.focus();
     }
 }
+
 
 export function undoStep() {
     if (steps > 0) {

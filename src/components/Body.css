@@ -403,15 +403,17 @@ hr.below-thickness {
     word-break: break-word;
 }
 .trash {
-
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
     position: absolute;
     bottom: 0;
     right: 5px;
     border-radius: 5px;
+    border: 1px solid transparent;
 }
 .trash:hover{
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
     border: 1px solid red;
+
 }
 .trash-icon{
     width: 20px;

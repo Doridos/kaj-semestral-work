@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import './TopBar.css'
 import logoutImage from '../images/logout.svg'
 
 export function TopBar(props){
     let username = props.username;
-    let menuVisible = false
+    const [menuVisible, setMenuVisible] = useState(true);
+
     return (
         <div className="top-bar">
             <div className="header">
@@ -29,7 +30,9 @@ export function TopBar(props){
                                                                                   src={logoutImage}
                                                                                   alt="Ikonka pro odhlášení"/></span></p></div>
             <button onClick = {event => {
-                    menuVisible = !menuVisible;
+
+                    setMenuVisible(!menuVisible);
+                    console.log("aaa")
                     if (menuVisible) {
                     document.querySelector('.lines-button').classList.add('close');
                     document.body.classList.add('menu-visible')

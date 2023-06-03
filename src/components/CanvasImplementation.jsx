@@ -22,7 +22,9 @@ function Slider({ value, min, max, step, onChange }) {
             max={max}
             step={step}
             value={value}
-            onChange={(e) => onChange(parseFloat(e.target.value))}
+            onChange={(e) => {onChange(parseFloat(e.target.value))
+            document.querySelector('canvas').getContext('2d').lineWidth = e.target.value
+            console.log(e.target.value)}}
         />
     );
 }
@@ -69,7 +71,6 @@ export function CanvasImplementation(props){
     }
     function highlightText(){
         setLastColor(color)
-        setColor("#FFFFFF")
         document.querySelector('.svg-icon-pen').classList.remove("highlighted")
         document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
         document.querySelector('.svg-icon-eraser.img').classList.remove("highlighted")
@@ -77,7 +78,6 @@ export function CanvasImplementation(props){
     }
     function highlightPen(){
         deactivateTextInput()
-        setColor(lastColor ==="none" ? "#000000" : lastColor)
         document.querySelector('.svg-icon-eraser').classList.remove("highlighted")
         document.querySelector('.text').classList.remove("highlighted")
         document.querySelector('.svg-icon-eraser.img').classList.remove("highlighted")
@@ -99,15 +99,9 @@ export function CanvasImplementation(props){
             ctx.fillStyle = "white";
             emptyHistory()
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            storeToNotebook(props.name, page, document.querySelector('canvas').toDataURL())
             addStep()
         }
-    }
-
-    function download(dataUrl, filename) {
-        const link = document.createElement("a");
-        link.href = dataUrl;
-        link.download = filename;
-        link.click();
     }
 
     function incrementPage(){
@@ -152,7 +146,7 @@ export function CanvasImplementation(props){
             <div className="page">
                 <div className="notebook-name">{props.name}</div>
                 <section>
-                    < Canvas width={794} height={1123} color={color} inputWidth={strokeWidth} name={props.name}/>
+                    < Canvas width={794} height={1123} color={color} name={props.name}/>
                     <aside className="connection-status hide">
                         <p >You are offline automatic saving is turned off.</p>
                     </aside>
@@ -233,6 +227,9 @@ export function CanvasImplementation(props){
 
                         }}><ColorPicker value={colorPicker2} onChange={(e) =>
                         {setColorPicker2("#" + e.value)
+                            console.log(colorPicker2)
+                            console.log(color)
+                            console.log("#" + e.value)
                             setColor("#" + e.value)
                         }} /></div>
 
@@ -251,7 +248,8 @@ export function CanvasImplementation(props){
                             }
 
                         }}><ColorPicker value={colorPicker3} onChange={(e) =>
-                        {setColorPicker3("#" + e.value)
+                        {   console.log(e.value)
+                            setColorPicker3("#" + e.value)
                             setColor("#" + e.value)
                         }} /></div>
 
@@ -276,13 +274,15 @@ export function CanvasImplementation(props){
 
                         <hr/>
 
-                        <Slider value={strokeWidth==="none" ? 0 : strokeWidth} min={0} max={20} step={1} onChange={e => {setStrokeWidth(e)
+                        <Slider value={strokeWidth==="none" ? 0 : strokeWidth} min={0} max={20} step={1} onChange={e => {
+                            setStrokeWidth(e)
                             if(document.querySelector('.circle')){
                                 let elementStyle = document.querySelector('.circle').style
                                 elementStyle.width = strokeWidth + 30 +"px"
                                 elementStyle.height = strokeWidth +"px"
                             }
-                        }} />
+                        }
+                        }  />
                         <div className="circle-holder"><div className="circle"></div></div>
 
                         <hr className="below-thickness"/>
@@ -292,6 +292,7 @@ export function CanvasImplementation(props){
                             deactivateTextInput()
                             deactivateImageInput()
                             highlightPen()
+                            setColor(lastColor)
                         }
                         }>
                             <path
@@ -307,8 +308,13 @@ export function CanvasImplementation(props){
                                 d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
                         </svg>
 
-                        <svg className="svg-icon-pen text" viewBox="0 0 20 20" onClick={event => {activateTextInput()
-                            highlightText()}}>
+                        <svg className="svg-icon-pen text" viewBox="0 0 20 20" onClick={event => {
+                            activateTextInput()
+                            highlightText()
+                            setDontShow1(true)
+                            setDontShow2(true)
+                            setDontShow3(true)
+                            setDontShow4(true)}}>
                             <path
                                 d="M5 2a.5.5 0 0 1 .5-.5c.862 0 1.573.287 2.06.566.174.099.321.198.44.286.119-.088.266-.187.44-.286A4.165 4.165 0 0 1 10.5 1.5a.5.5 0 0 1 0 1c-.638 0-1.177.213-1.564.434a3.49 3.49 0 0 0-.436.294V7.5H9a.5.5 0 0 1 0 1h-.5v4.272c.1.08.248.187.436.294.387.221.926.434 1.564.434a.5.5 0 0 1 0 1 4.165 4.165 0 0 1-2.06-.566A4.561 4.561 0 0 1 8 13.65a4.561 4.561 0 0 1-.44.285 4.165 4.165 0 0 1-2.06.566.5.5 0 0 1 0-1c.638 0 1.177-.213 1.564-.434.188-.107.335-.214.436-.294V8.5H7a.5.5 0 0 1 0-1h.5V3.228a3.49 3.49 0 0 0-.436-.294A3.166 3.166 0 0 0 5.5 2.5.5.5 0 0 1 5 2zm3.352 1.355zm-.704 9.29z"/>
                         </svg>

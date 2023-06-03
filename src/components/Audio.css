@@ -1,15 +1,119 @@
-.icon.active .circle {
-    animation: pulse 1.5s infinite;
+.audio-container {
+    margin-top: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 700px;
+    width: 100%;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
 
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.2);
-    }
-    100% {
-        transform: scale(1);
-    }
+.audio-controls {
+    display: flex;
+    align-items: center;
+}
+
+.control-button {
+    border: none;
+    border-radius: 4px;
+    background-color: #4691f6;
+    color: white;
+    font-size: 16px;
+    padding: 8px 16px;
+    margin-right: 8px;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+
+.control-button:hover {
+    opacity: 0.8;
+}
+
+.recording-status {
+    font-size: 14px;
+    margin-left: 8px;
+    color: #4691f6;
+}
+
+.microphone-error {
+    margin-top: 16px;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.audio-list {
+    list-style-type: none;
+    margin: 16px 0;
+    padding: 0;
+    overflow-y: auto;
+    max-height: 1000px;
+}
+
+.audio-item {
+    display: flex;
+    width: 600px;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 12px;
+    background-color: #f7f7f7;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+.audio-delete{
+    padding: 0;
+    background-color: inherit;
+    margin-right: 1em;
+}
+.audio-delete:hover{
+    border: 1px solid red;
+}
+
+.audio-item.selected {
+    background-color: #e4e4e4;
+}
+
+.audio-info {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.audio-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 16px;
+    color: #333;
+    cursor: pointer;
+}
+
+.audio-input {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    outline: none;
+}
+
+.audio-actions {
+    display: flex;
+    align-items: center;
+}
+
+.audio-delete {
+    color: #4691f6;
+    margin-left: 16px;
+    cursor: pointer;
+}
+
+.audio-player {
+    width: 100%;
 }

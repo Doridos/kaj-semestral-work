@@ -63,7 +63,7 @@ export function Todo() {
                     let objectStore = t.objectStore("notebookNames");
                     objectStore.add({
                         name: 'todo-1-items',
-                        todos: []
+                        todos: [todo]
                     });
                 }
                 else {
@@ -199,6 +199,7 @@ export function Todo() {
                             type="text"
                             placeholder="Enter a new todo"
                             value={newTodo}
+                            autoFocus
                             onChange={handleInputChange}
                         />
                     </form>
