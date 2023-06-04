@@ -195,10 +195,15 @@ export function Audio() {
     };
 
     const handleRecordingNameChange = (event, index) => {
-        if (index === editingIndex) {
-            const updatedRecordings = [...recordings];
-            updatedRecordings[index].name = event.target.value;
-            setRecordings(updatedRecordings);
+        if(event.target.value.length > 40){
+            alert("The name cannot exceed length of 40 chars.")
+        }
+        else{
+            if (index === editingIndex) {
+                const updatedRecordings = [...recordings];
+                updatedRecordings[index].name = event.target.value;
+                setRecordings(updatedRecordings);
+            }
         }
     };
 
@@ -211,6 +216,10 @@ export function Audio() {
     };
 
     const handleNameConfirmation = (index) => {
+        if(recordings[index].name === ""){
+            alert("The name cannot be empty.")
+            recordings[index].name = "Error - The name cannot be empty."
+        }
         if (index === editingIndex) {
             setEditingIndex(null);
         }
@@ -265,7 +274,7 @@ export function Audio() {
                             </>
                         ) : (
                             <button className="control-button start" onClick={startRecording}>
-                                Start Recording
+                                Start recording
                             </button>
                         )
                     ) : (
