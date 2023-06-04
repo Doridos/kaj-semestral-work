@@ -53,8 +53,7 @@ body.menu-visible .menu  {
 .page section aside {
     margin: 0;
     position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 30%;
     background-color: white;
     text-align: center;
     right: 0;
@@ -68,8 +67,7 @@ body.menu-visible .menu  {
 .page section aside.pages {
     margin: 0;
     position: fixed;
-    top: 23%;
-    transform: translateY(-90%);
+    top: 20%;
     background-color: white;
     text-align: center;
     right: 0;
@@ -88,15 +86,14 @@ body.menu-visible .menu  {
 .page section aside.close-notebook {
     position: fixed;
     font-size: 10px;
-    top: 8%;
-    transform: translateY(30%);
+    top: 71px;
     text-align: center;
     width: 120px;
     border: 1px red solid;
     height: 30px;
     opacity: 1;
     margin-right: 5px;
-    border-radius: 20px;
+    border-radius: 0 0 30px 30px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
     cursor: pointer;
 }
@@ -288,6 +285,9 @@ hr.below-thickness {
 .heavy {
     font: bold 30px sans-serif;
 }
+.close-menu{
+    display: none;
+}
 .loading-circle {
     display: flex;
     align-items: center;
@@ -302,7 +302,7 @@ hr.below-thickness {
 }
 
 .loading-circle::after {
-    content: "Creating new notebook, it may take a while";
+    content: "Creating new notebook";
     display: inline-block;
     font-size: 16px;
     color: #ffffff;
@@ -505,5 +505,11 @@ hr.below-thickness {
     }
     .modal-content h2{
         font-size: 20px
+    }
+    .loading-circle{
+        justify-content: normal;
+    }
+    .loading-circle::before{
+        margin-left: 20%;
     }
 }

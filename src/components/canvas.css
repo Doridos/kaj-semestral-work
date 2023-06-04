@@ -32,9 +32,11 @@ canvas:hover{
 @media only screen and (max-width: 1000px) {
 
     .page section aside.close-notebook{
+        position: absolute;
+        display: block;
         font-size: 12px;
-        border-radius: 0 0 30px 30px;;
-        top: 43px;
+        border-radius: 0 0 30px 30px;
+        top: 51px;
         right: -5px;
         height: 23px;
         margin-right: 5px;
@@ -44,15 +46,36 @@ canvas:hover{
         height: 20px;
     }
     .page section aside.pages{
-        top: 98%;
-        width: 20%;
+        top: 13%;
+        width: 78px;
         height: 100px;
-        left: 2%;
+        right: 2%;
+    }
+    .control-hide{
+        left: 100%;
+    }
+    .control-show{
+        transform: translateX(-110%);
+    }
+    .page section aside{
+        top: 30%;
+        height: 380px;
+        width: 78px;
+        right: 2%;
+    }
+    .svg-icon-eraser.img{
+        width: 80px
     }
     p.count{
         margin-top: 10px;
         font-size: 30px;
         line-height: 1;
+    }
+    .svg-icon-text, .svg-icon-pen{
+        margin-left: 0.4em
+    }
+    .svg-icon-eraser{
+        margin-right: 0;
     }
     p.small-text{
         font-size: 10px;
@@ -60,12 +83,6 @@ canvas:hover{
     .add-new-page{
         margin-top: 10px;
         height: 2em;
-    }
-    .page section aside{
-        top: 93%;
-        height: 100px;
-        width: 70%;
-        right: 2%;
     }
     .page section aside hr{
         display: none;
@@ -80,5 +97,27 @@ canvas:hover{
     }
     .circle-holder{
         display: none;
+    }
+    .close-menu{
+        display: block;
+        position: absolute;
+        font-size: 12px;
+        top: 51px;
+        text-align: center;
+        width: 85px;
+        border: 1px #4691f6 solid;
+        height: 23px;
+        opacity: 1;
+        margin-right: 5px;
+        border-radius: 0 0 30px 30px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+        cursor: pointer;
+    }
+    .close-menu-text{
+        padding-bottom: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 20px;
     }
 }

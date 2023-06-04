@@ -162,6 +162,21 @@ export function CanvasImplementation(props){
         <div>
             <div className="page">
                 <div className="notebook-name">{props.name}</div>
+                <aside className="close-menu" onClick= {event => {
+                    const elements = document.querySelectorAll('.control-hide');
+                    if(height > 660) {
+                        elements.forEach((element) => {
+                            element.classList.toggle('control-show');
+                        });
+                    }
+                    else{
+                        elements.forEach((element) => {
+                            element.classList.remove('control-show');
+                        });
+                        alert("Rotate the device please.")
+                    }
+                }}>
+                    <p className="close-menu-text">Tools</p></aside>
                 <section>
                     < Canvas width={canvasWidth} height={canvasHeight} color={color} name={props.name}/>
                     <aside className="close-notebook" onClick= {event => {
@@ -176,7 +191,7 @@ export function CanvasImplementation(props){
                         <p className="close-text"><svg className="svg-icon-close" viewBox="0 0 20 20">
                             <path d="M15.898,4.045c-0.271-0.272-0.713-0.272-0.986,0l-4.71,4.711L5.493,4.045c-0.272-0.272-0.714-0.272-0.986,0s-0.272,0.714,0,0.986l4.709,4.711l-4.71,4.711c-0.272,0.271-0.272,0.713,0,0.986c0.136,0.136,0.314,0.203,0.492,0.203c0.179,0,0.357-0.067,0.493-0.203l4.711-4.711l4.71,4.711c0.137,0.136,0.314,0.203,0.494,0.203c0.178,0,0.355-0.067,0.492-0.203c0.273-0.273,0.273-0.715,0-0.986l-4.711-4.711l4.711-4.711C16.172,4.759,16.172,4.317,15.898,4.045z"></path>
                         </svg>Close</p></aside>
-                    <aside className="pages">
+                    <aside className="pages control-hide control-show">
                         <p className="count"><span className="arrow" onClick={event => {
                             storeToNotebook(props.name, page, document.querySelector('canvas').toDataURL())
                             decrementPage()
@@ -209,7 +224,7 @@ export function CanvasImplementation(props){
                         </svg>
                         <p className="hide small-text"><span>&#8505;</span>Add new page</p>
                     </aside>
-                    <aside>
+                    <aside className="control-hide control-show">
                         <div className="colorPicker1" onClickCapture={e => {
                             highlightPen()
                             if(document.querySelector('div.p-colorpicker-panel')) {

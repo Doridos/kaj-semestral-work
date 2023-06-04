@@ -52,7 +52,7 @@ export function Body() {
             addStep()
             setTimeout(() => {
                 setIsLoading(false);
-            }, 500);
+            }, 400);
         }
     }
 

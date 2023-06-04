@@ -1,6 +1,6 @@
 /* General styles */
 .todo-container {
-    min-width: 500px;
+    min-width: 30%;
     max-width: fit-content;
     padding: 20px;
     margin: 1em auto 0;
@@ -173,6 +173,9 @@ label {
 }
 @media only screen and (max-width: 1000px) {
     .todo-container{
-        min-width: 40%
+        width: 80%
+    }
+    .todo-container h1{
+        font-size: 25px;
     }
 }
