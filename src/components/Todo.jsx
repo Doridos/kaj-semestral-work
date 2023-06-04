@@ -56,9 +56,7 @@ export function Todo() {
             let request = objectStore.get('todo-1-items'); // Get the record by the username
             request.onsuccess = function (e) {
                 let record = e.target.result;
-                console.log(record)
                 if (!record) {
-                    console.log("doesnt")
                     let t = db.transaction(["notebookNames"], "readwrite");
                     let objectStore = t.objectStore("notebookNames");
                     objectStore.add({
@@ -71,7 +69,6 @@ export function Todo() {
                     const updateRequest = t.objectStore("notebookNames").put(record);
 
                     updateRequest.onsuccess = function(event) {
-                        console.log('Record updated successfully');
                     };
 
                     updateRequest.onerror = function(event) {
@@ -119,7 +116,6 @@ export function Todo() {
                 const updateRequest = t.objectStore("notebookNames").put(record);
 
                 updateRequest.onsuccess = function (event) {
-                    console.log('Record updated successfully');
                 };
 
                 updateRequest.onerror = function (event) {

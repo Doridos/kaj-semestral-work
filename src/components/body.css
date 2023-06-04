@@ -84,7 +84,7 @@ body.menu-visible .menu  {
     height: 1.5em;
 }
 .page section aside.close-notebook {
-    position: fixed;
+    position: absolute;
     font-size: 10px;
     top: 71px;
     text-align: center;
@@ -497,7 +497,12 @@ hr.below-thickness {
         width: 30%;
     }
     #notebookName{
-        padding: 10px
+        padding: 10px;
+        margin-bottom: 1em;
+    }
+    .small-text-alert{
+        margin-bottom: 1em;
+        line-height: 1.5;
     }
     .modal-content{
         padding: 10px;

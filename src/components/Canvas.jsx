@@ -37,7 +37,6 @@ const Canvas = ({
                       color,
                       strokeWidth
     ){
-        console.log(inputWidth)
         start = start ?? end;
         ctx.beginPath();
         ctx.strokeStyle = color;
@@ -83,8 +82,7 @@ function renderText(e) {
         input.type = "text";
         input.id = "input-text";
         input.style.position = "absolute";
-        console.log(e.clientX)
-        input.style.top = e.clientY - 10 + "px";
+        input.style.top = e.clientY +  window.scrollY - 10 + "px";
         input.style.left = e.clientX + "px";
 
         input.addEventListener("keydown", function(event) {
@@ -132,9 +130,6 @@ export function undoStep() {
         steps--;
         let restorePicture = new Image();
         restorePicture.src = history[steps];
-        console.log(history)
-        console.log(restorePicture)
-        console.log(steps)
         restorePicture.onload = function () {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(restorePicture, 0, 0);
@@ -151,17 +146,13 @@ export function redoStep() {
     }
 }
 export function addStep() {
-    console.log("addstep")
     steps++;
-    console.log(document.querySelector('canvas'))
     if (steps < history.length) {
         history.splice(steps);
     }
     if (document.querySelector('canvas')) {
         history.push(document.querySelector('canvas').toDataURL());
     }
-
-    console.log(history);
 }
 
 export function activateTextInput() {
@@ -345,7 +336,6 @@ export function restorePage(page){
     let canvas = document.querySelector('canvas')
     let ctx = document.querySelector('canvas').getContext("2d");
     emptyHistory()
-    console.log(history)
     getFromNotebook(nameForSave, page)
         .then((imageData) => {
             let restorePicture = new Image();

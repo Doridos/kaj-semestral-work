@@ -56,7 +56,6 @@ export function TopBar(props){
             <button onClick = {event => {
 
                     setMenuVisible(!menuVisible);
-                    console.log("aaa")
                     if (menuVisible) {
                     document.querySelector('.lines-button').classList.add('close');
                     document.body.classList.add('menu-visible')

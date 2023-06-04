@@ -30,6 +30,9 @@ canvas:hover{
     color: gray;
 }
 @media only screen and (max-width: 1000px) {
+    .info{
+        display: none;
+    }
 
     .page section aside.close-notebook{
         position: absolute;
@@ -59,12 +62,12 @@ canvas:hover{
     }
     .page section aside{
         top: 30%;
-        height: 380px;
+        height: 335px;
         width: 78px;
         right: 2%;
     }
     .svg-icon-eraser.img{
-        width: 80px
+        display:none;
     }
     p.count{
         margin-top: 10px;

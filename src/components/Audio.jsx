@@ -16,7 +16,6 @@ export function Audio() {
                 request.onsuccess = function (e) {
                     if (e.target.result) {
                         const record = e.target.result.recordings;
-                        console.log(record);
                         setRecordings(record);
                     }
                 };
@@ -110,9 +109,7 @@ export function Audio() {
                         let request = objectStore.get('audio-1-items');
                         request.onsuccess = function (e) {
                             let record = e.target.result;
-                            console.log(record);
                             if (!record) {
-                                console.log('doesnt');
                                 let t = db.transaction(['notebookNames'], 'readwrite');
                                 let objectStore = t.objectStore('notebookNames');
                                 objectStore.add({
@@ -129,7 +126,6 @@ export function Audio() {
                                     .put(record);
 
                                 updateRequest.onsuccess = function (event) {
-                                    console.log('Record updated successfully');
                                 };
 
                                 updateRequest.onerror = function (event) {
@@ -189,7 +185,6 @@ export function Audio() {
                 const updateRequest = t.objectStore('notebookNames').put(record);
 
                 updateRequest.onsuccess = function (event) {
-                    console.log('Record updated successfully');
                 };
 
                 updateRequest.onerror = function (event) {
@@ -231,7 +226,6 @@ export function Audio() {
                 const updateRequest = t.objectStore('notebookNames').put(record);
 
                 updateRequest.onsuccess = function (event) {
-                    console.log('Record updated successfully');
                 };
 
                 updateRequest.onerror = function (event) {

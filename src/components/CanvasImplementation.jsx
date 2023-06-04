@@ -23,7 +23,7 @@ function Slider({ value, min, max, step, onChange }) {
             value={value}
             onChange={(e) => {onChange(parseFloat(e.target.value))
             document.querySelector('canvas').getContext('2d').lineWidth = e.target.value
-            console.log(e.target.value)}}
+            }}
         />
     );
 }
@@ -42,7 +42,6 @@ export function CanvasImplementation(props){
         canvasWidth = 794;
         canvasHeight = 1123
     } else {
-        console.log(width)
         // Screen is smaller than 1000px, calculate the values
         canvasWidth = `${width}px`;
         canvasHeight = `${height}px`;
@@ -202,7 +201,6 @@ export function CanvasImplementation(props){
 
 
                         }}>&#8249;</span>{page}/{pagesCount !== null ? pagesCount : "..."}<span className="arrow" onClick={event => {
-                            console.log(page)
                             storeToNotebook(props.name, page, document.querySelector('canvas').toDataURL())
                             incrementPage()
 
@@ -215,7 +213,6 @@ export function CanvasImplementation(props){
                         <svg className="svg-icon-undo add-new-page" viewBox="0 0 20 20" onClick={event => {
                             setPage(pagesCount+1)
                             setPageCanvas(pagesCount+1)
-                            console.log(page)
                             storeToNotebook(props.name, page, document.querySelector('canvas').toDataURL())
                             addNewPage(pagesCount+1)
                             setPagesCount(pagesCount+1)}}>
@@ -388,6 +385,7 @@ export function CanvasImplementation(props){
 
 
                         <svg className="svg-icon-undo" viewBox="0 0 20 20" onClick={e => {
+                            storeToNotebook(props.name, page, document.querySelector('canvas').toDataURL())
                             handleDownload()
                             // download(document.querySelector('canvas').toDataURL('image/png'), props.name)
                         }}>

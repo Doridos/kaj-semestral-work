@@ -48,7 +48,6 @@ export function useOnDraw(onDraw, name){
                     };
                 })
                 .catch((error) => {
-                    console.log("bbb");
                     ctx.fillStyle = "white";
                     ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
                     addStep()

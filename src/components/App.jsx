@@ -29,7 +29,6 @@ export function App(props) {
     }
 
     function handleValueChange(newValue){
-        console.log(newValue)
         setValue(newValue)
     }
 

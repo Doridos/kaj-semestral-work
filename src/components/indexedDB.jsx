@@ -16,7 +16,6 @@ export async function createPDFFromDBRecords(objectKey) {
 
             getRequest.onsuccess = async (e) => {
                 const object = e.target.result;
-                console.log(object);
                 if (object) {
                     const pages = object.pages; // Assuming pages is an array of data URLs
 
@@ -54,7 +53,6 @@ export async function createPDFFromDBRecords(objectKey) {
 }
 
 export function storeToNotebook(name, page, data) {
-    console.log("Storing page " + page )
     let r = indexedDB.open(localStorage.getItem("user"))
     r.onsuccess = function(e) {
         let db = e.target.result
@@ -68,11 +66,9 @@ export function storeToNotebook(name, page, data) {
             else {
                 record.pages.push(data)
             }
-            console.log(record.pages)
             const updateRequest = t.objectStore("notebookNames").put(record);
 
             updateRequest.onsuccess = function(event) {
-                console.log('Record updated successfully');
             };
 
             updateRequest.onerror = function(event) {
@@ -85,7 +81,6 @@ export function storeToNotebook(name, page, data) {
 export function getFromNotebook(name, page) {
     page -= 1
     let user = localStorage.getItem("user")
-    console.log("getfromNote")
     return new Promise((resolve, reject) => {
         let r = indexedDB.open(user)
         r.onsuccess = function(e) {
@@ -94,7 +89,6 @@ export function getFromNotebook(name, page) {
                 let t = db.transaction(["notebookNames"], "readonly")
                 let r = t.objectStore("notebookNames").get(name)
                 r.onsuccess = function(e) {
-                    console.log(e.target.result)
                     if(e.target.result){
                         const record = e.target.result.pages[page]
 
@@ -106,9 +100,6 @@ export function getFromNotebook(name, page) {
                         }
                     }
                 }
-            }
-            else {
-                console.log("getFromNotebook: ObjectStore doesnt exist")
             }
 
         };
@@ -167,10 +158,8 @@ export async function getPagesCount(name) {
                     }
                 }
                 r.onerror = function (e){
-                    console.log("Object store is being created")
                 }
             } catch (e){
-                console.log("Object store is being created")
             }
 
         };

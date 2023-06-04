@@ -205,5 +205,9 @@ p{
         width: 30px;
         bottom: -8px;
     }
+    .connection-status{
+        left: 50px;
+        top: 16px;
+    }
 
 }
