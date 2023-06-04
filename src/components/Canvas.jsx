@@ -1,6 +1,6 @@
 import './canvas.css'
 import {useOnDraw} from './Hooks.jsx'
-import {deleteDB, getFromNotebook, storeToNotebook} from "./indexedDB.jsx";
+import {deleteDB, getFromNotebook, storeToNotebook} from "./IndexedDB.jsx";
 
 let history = [];
 let steps = -1;
@@ -14,6 +14,7 @@ let pageForSave = 1
 let nameForSave = ""
 let allowedToSave = false
 
+// Component for implementing Canvas functionality.
 
 const Canvas = ({
     width,

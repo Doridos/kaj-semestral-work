@@ -5,9 +5,9 @@ import "./body.css";
 
 import { CanvasImplementation } from "./CanvasImplementation.jsx";
 import {addNewPage, addStep, setName, setPageCanvas} from "./Canvas.jsx";
-import {deleteDB} from "./indexedDB.jsx";
+import {deleteDB} from "./IndexedDB.jsx";
 import {Menu} from "./Menu.jsx";
-
+// This is some basic component in application, which is made mainly for Canvas functionality.
 export function Body() {
     let r = indexedDB.open(localStorage.getItem('user'), 2)
     r.onupgradeneeded = function(e) {

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './audio.css';
 
+// This is component in application, which is made for displaying, playing and recording audio recordings.
 export function Audio() {
     useEffect(() => {
         function fetchData() {

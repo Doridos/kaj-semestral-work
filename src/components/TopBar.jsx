@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import './topbar.css'
 import logoutImage from '../images/logout.svg'
 
+// Topbar component which is displayed on top and contains information about user and icon for accessing menu.
 export function TopBar(props){
     function logDisconnected() {
         console.log("Disconnected");

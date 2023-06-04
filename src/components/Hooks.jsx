@@ -1,7 +1,8 @@
 import {useRef, useState} from "react";
 import {addStep} from "./Canvas.jsx";
-import {getFromNotebook, storeToNotebook} from "./indexedDB.jsx";
+import {getFromNotebook, storeToNotebook} from "./IndexedDB.jsx";
 
+// Component used for drawing on canvas.
 export function useOnDraw(onDraw, name){
 
     const canvasRef = useRef(null)

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {createPDFFromDBRecords, deleteDB, getPagesCount, storeToNotebook} from "./indexedDB.jsx";
+import {createPDFFromDBRecords, deleteDB, getPagesCount, storeToNotebook} from "./IndexedDB.jsx";
 import Canvas, {
     activateImageInput,
     activateTextInput, addImage,
@@ -27,7 +27,7 @@ function Slider({ value, min, max, step, onChange }) {
         />
     );
 }
-
+// Canvas view  component.
 export function CanvasImplementation(props){
     const getWindowDimensions = () => {
         const { innerWidth: width, innerHeight: height } = window;

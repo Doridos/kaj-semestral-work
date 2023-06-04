@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './todo.css';
 
+// This is component in application, which is made for displaying, adding and removing planned items.
 export function Todo() {
     useEffect(() => {
         function fetchData() {

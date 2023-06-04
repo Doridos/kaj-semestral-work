@@ -1,4 +1,4 @@
-import { deleteDB } from './indexedDB.jsx';
+import { deleteDB } from './IndexedDB.jsx';
 import React, { useState, useEffect } from 'react';
 
 export function Menu(props) {

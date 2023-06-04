@@ -6,6 +6,7 @@ import { Audio } from "./Audio.jsx";
 import { Todo } from "./Todo.jsx";
 import {emptyHistory} from "./Canvas.jsx";
 
+// Basic component for skeleton of application.
 export function App(props) {
     const username = props.username;
     const setUsername = props.function;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { PDFDocument } from 'pdf-lib';
 
+// Component for indexedDB functionality, and its methods.
 export async function createPDFFromDBRecords(objectKey) {
     const pdfDoc = await PDFDocument.create();
 
