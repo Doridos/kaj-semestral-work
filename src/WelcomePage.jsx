@@ -31,7 +31,7 @@ function WelcomePage() {
                     }}>
                             <label htmlFor="username">Username:</label>
                             <input id="username" name="username" type="text" placeholder="Enter your username" autoComplete="new-password"
-                                   autoFocus></input>
+                                   autoFocus required></input>
                             <button type="submit">Login</button>
                     </form>
                 </div>

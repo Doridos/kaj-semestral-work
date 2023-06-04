@@ -279,7 +279,10 @@ hr.below-thickness {
 .highlighted{
     background-color: rgba(211, 211, 211, 0.5);
 }
-.colorPicker{
+.colorPicker1,
+.colorPicker2,
+.colorPicker3,
+.colorPicker4{
     display: inline;
 }
 .heavy {
@@ -480,4 +483,27 @@ hr.below-thickness {
 }
 .close:hover{
     cursor: pointer;
+}
+@media only screen and (max-width: 1000px) {
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    .notebook-grid{
+        width: 80%;
+    }
+    .menu{
+        top: 51px;
+        width: 30%;
+    }
+    #notebookName{
+        padding: 10px
+    }
+    .modal-content{
+        padding: 10px;
+        margin-top: 9em;
+    }
+    .modal-content h2{
+        font-size: 20px
+    }
 }

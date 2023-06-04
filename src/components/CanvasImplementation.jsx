@@ -29,6 +29,24 @@ function Slider({ value, min, max, step, onChange }) {
 }
 
 export function CanvasImplementation(props){
+    const getWindowDimensions = () => {
+        const { innerWidth: width, innerHeight: height } = window;
+        return { width, height };
+    };
+
+    const { width, height } = getWindowDimensions();
+    let canvasWidth, canvasHeight;
+
+    if (width > 1000) {
+        // Screen is bigger than 1000px, use the provided values
+        canvasWidth = 794;
+        canvasHeight = 1123
+    } else {
+        console.log(width)
+        // Screen is smaller than 1000px, calculate the values
+        canvasWidth = `${width}px`;
+        canvasHeight = `${height}px`;
+    }
     const [strokeWidth, setStrokeWidth] = useState("none");
     const [color, setColor] = useState("none");
     const [colorPicker1, setColorPicker1] = useState("#000000");
@@ -145,7 +163,7 @@ export function CanvasImplementation(props){
             <div className="page">
                 <div className="notebook-name">{props.name}</div>
                 <section>
-                    < Canvas width={794} height={1123} color={color} name={props.name}/>
+                    < Canvas width={canvasWidth} height={canvasHeight} color={color} name={props.name}/>
                     <aside className="close-notebook" onClick= {event => {
                         storeToNotebook(props.name, page, document.querySelector('canvas').toDataURL())
                         highlightPen()
@@ -192,7 +210,7 @@ export function CanvasImplementation(props){
                         <p className="hide small-text"><span>&#8505;</span>Add new page</p>
                     </aside>
                     <aside>
-                        <div className="colorPicker" onClickCapture={e => {
+                        <div className="colorPicker1" onClickCapture={e => {
                             highlightPen()
                             if(document.querySelector('div.p-colorpicker-panel')) {
                                 document.querySelector('div.p-colorpicker-panel').style.display = "none"
@@ -212,7 +230,7 @@ export function CanvasImplementation(props){
                             setColor("#" + e.value)
                             document.querySelector('.svg-icon-pen').style.setProperty('fill', "#" + e.value, 'important');
                         }} /></div>
-                        <div className="colorPicker" onClickCapture={e => {
+                        <div className="colorPicker2" onClickCapture={e => {
                             highlightPen()
                             if(document.querySelector('div.p-colorpicker-panel')) {
                                 document.querySelector('div.p-colorpicker-panel').style.display = "none"
@@ -233,7 +251,7 @@ export function CanvasImplementation(props){
                             document.querySelector('.svg-icon-pen').style.setProperty('fill', "#" + e.value, 'important');
                         }} /></div>
 
-                        <div className="colorPicker" onClickCapture={e => {
+                        <div className="colorPicker3" onClickCapture={e => {
                             highlightPen()
                             if(document.querySelector('div.p-colorpicker-panel')) {
                                 document.querySelector('div.p-colorpicker-panel').style.display = "none"
@@ -255,7 +273,7 @@ export function CanvasImplementation(props){
                             document.querySelector('.svg-icon-pen').style.setProperty('fill', "#" + e.value, 'important');
                         }} /></div>
 
-                        <div className="colorPicker" onClickCapture={e => {
+                        <div className="colorPicker4" onClickCapture={e => {
                             highlightPen()
                             if(document.querySelector('div.p-colorpicker-panel')) {
                                 document.querySelector('div.p-colorpicker-panel').style.display = "none"

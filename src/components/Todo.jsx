@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import './Todo.css';
+import './todo.css';
 
 export function Todo() {
     useEffect(() => {

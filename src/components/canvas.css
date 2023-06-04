@@ -1,5 +1,4 @@
 canvas{
-    /*border: 1px solid black;*/
     background-color: white;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
@@ -29,4 +28,57 @@ canvas:hover{
 .info:before{
     content: "\2139";
     color: gray;
+}
+@media only screen and (max-width: 1000px) {
+
+    .page section aside.close-notebook{
+        font-size: 12px;
+        border-radius: 0 0 30px 30px;;
+        top: 43px;
+        right: -5px;
+        height: 23px;
+        margin-right: 5px;
+        width: 85px;
+    }
+    .close-text{
+        height: 20px;
+    }
+    .page section aside.pages{
+        top: 98%;
+        width: 20%;
+        height: 100px;
+        left: 2%;
+    }
+    p.count{
+        margin-top: 10px;
+        font-size: 30px;
+        line-height: 1;
+    }
+    p.small-text{
+        font-size: 10px;
+    }
+    .add-new-page{
+        margin-top: 10px;
+        height: 2em;
+    }
+    .page section aside{
+        top: 93%;
+        height: 100px;
+        width: 70%;
+        right: 2%;
+    }
+    .page section aside hr{
+        display: none;
+    }
+    .colorPicker2,
+    .colorPicker3,
+    .colorPicker4{
+        display: none;
+    }
+    input[type="range"]{
+        width: 50px;
+    }
+    .circle-holder{
+        display: none;
+    }
 }

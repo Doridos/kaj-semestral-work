@@ -66,3 +66,11 @@ button:hover{
   cursor: pointer;
   opacity: 1;
 }
+@media only screen and (max-width: 1000px) {
+  .login-box{
+    width: 75%;
+  }
+  h1{
+    font-size: 23px;
+  }
+}

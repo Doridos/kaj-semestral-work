@@ -171,4 +171,8 @@ label {
     right: auto;
     left: 20px;
 }
-
+@media only screen and (max-width: 1000px) {
+    .todo-container{
+        min-width: 40%
+    }
+}
