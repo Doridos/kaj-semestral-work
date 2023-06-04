@@ -196,6 +196,7 @@ export function Todo() {
                             placeholder="Enter a new todo"
                             value={newTodo}
                             autoFocus
+                            required
                             onChange={handleInputChange}
                         />
                     </form>

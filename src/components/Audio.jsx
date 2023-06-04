@@ -297,6 +297,7 @@ export function Audio() {
                                         className="audio-input"
                                         value={recording.name}
                                         autoFocus
+                                        required
                                         onChange={(e) => handleRecordingNameChange(e, index)}
                                         onBlur={() => handleNameConfirmation(index)}
                                         onKeyDown={(e) => {
